@@ -1,0 +1,26 @@
+site_name: Operating Systems Notes
+
+theme:
+  name: material
+  palette:
+    scheme: slate
+  features:
+    - navigation.footer
+
+markdown_extensions:
+  - pymdownx.arithmatex:
+      generic: true
+  - admonition
+
+extra_javascript:
+  - javascripts/katex.js
+  - https://unpkg.com/katex@0/dist/katex.min.js
+  - https://unpkg.com/katex@0/dist/contrib/auto-render.min.js
+
+extra_css:
+  - https://unpkg.com/katex@0/dist/katex.min.css
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/millionhz/
