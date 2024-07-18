@@ -1,0 +1,4855 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="..">
+      
+      
+        <link rel="next" href="../20-persistence/">
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.29">
+    
+    
+      
+        <title>Virtualization - Operating Systems Notes</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.76a95c52.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="https://unpkg.com/katex@0/dist/katex.min.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#virtualization" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Operating Systems Notes" class="md-header__button md-logo" aria-label="Operating Systems Notes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Operating Systems Notes
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Virtualization
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7a5 5 0 0 0-5 5 5 5 0 0 0 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1M8 13h8v-2H8v2m9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1 0 1.71-1.39 3.1-3.1 3.1h-4V17h4a5 5 0 0 0 5-5 5 5 0 0 0-5-5Z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 7H7a5 5 0 0 0-5 5 5 5 0 0 0 5 5h10a5 5 0 0 0 5-5 5 5 0 0 0-5-5m0 8a3 3 0 0 1-3-3 3 3 0 0 1 3-3 3 3 0 0 1 3 3 3 3 0 0 1-3 3Z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="indigo"  aria-label="Switch to system preference"  type="radio" name="__palette" id="__palette_2">
+    
+      <label class="md-header__button md-icon" title="Switch to system preference" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 7H7a5 5 0 0 0-5 5 5 5 0 0 0 5 5h10a5 5 0 0 0 5-5 5 5 0 0 0-5-5M7 15a3 3 0 0 1-3-3 3 3 0 0 1 3-3 3 3 0 0 1 3 3 3 3 0 0 1-3 3Z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var media,input,key,value,palette=__md_get("__palette");if(palette&&palette.color){"(prefers-color-scheme)"===palette.color.media&&(media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']"),palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent"));for([key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Operating Systems Notes" class="md-nav__button md-logo" aria-label="Operating Systems Notes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    Operating Systems Notes
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Introduction
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Virtualization
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Virtualization
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#key-points" class="md-nav__link">
+    <span class="md-ellipsis">
+      Key points
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#virtualizing-cpu" class="md-nav__link">
+    <span class="md-ellipsis">
+      Virtualizing CPU
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Virtualizing CPU">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#time-sharing-vs-space-sharing" class="md-nav__link">
+    <span class="md-ellipsis">
+      Time Sharing vs Space Sharing
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#program-sate" class="md-nav__link">
+    <span class="md-ellipsis">
+      Program Sate
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Program Sate">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#address-space" class="md-nav__link">
+    <span class="md-ellipsis">
+      Address Space
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#registers" class="md-nav__link">
+    <span class="md-ellipsis">
+      Registers
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#io-information" class="md-nav__link">
+    <span class="md-ellipsis">
+      I/O Information
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#context-switching-basics" class="md-nav__link">
+    <span class="md-ellipsis">
+      Context Switching (Basics)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Context Switching (Basics)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#program-control-block-pcb" class="md-nav__link">
+    <span class="md-ellipsis">
+      Program Control Block (PCB)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#switching" class="md-nav__link">
+    <span class="md-ellipsis">
+      Switching
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-often-to-context-switch" class="md-nav__link">
+    <span class="md-ellipsis">
+      How often to context switch?
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#process-states" class="md-nav__link">
+    <span class="md-ellipsis">
+      Process States
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Process States">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#running" class="md-nav__link">
+    <span class="md-ellipsis">
+      Running
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ready" class="md-nav__link">
+    <span class="md-ellipsis">
+      Ready
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#blocked" class="md-nav__link">
+    <span class="md-ellipsis">
+      Blocked
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scheduling-de-scheduling" class="md-nav__link">
+    <span class="md-ellipsis">
+      Scheduling &amp; De-scheduling
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#process-creation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Process Creation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#processes-in-linux" class="md-nav__link">
+    <span class="md-ellipsis">
+      Processes in Linux
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#process-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      Process API
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Process API">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-does-exec-work" class="md-nav__link">
+    <span class="md-ellipsis">
+      How does exec() work?
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#resource-protection" class="md-nav__link">
+    <span class="md-ellipsis">
+      Resource Protection
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Resource Protection">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#direct-execution" class="md-nav__link">
+    <span class="md-ellipsis">
+      Direct Execution
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Direct Execution">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#problems" class="md-nav__link">
+    <span class="md-ellipsis">
+      Problems
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#limited-direct-execution" class="md-nav__link">
+    <span class="md-ellipsis">
+      Limited Direct Execution
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Limited Direct Execution">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mode-bit" class="md-nav__link">
+    <span class="md-ellipsis">
+      Mode Bit
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#trap" class="md-nav__link">
+    <span class="md-ellipsis">
+      trap
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-does-trap-work" class="md-nav__link">
+    <span class="md-ellipsis">
+      How does trap work?
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#switching-between-processes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Switching Between Processes
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Switching Between Processes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cooperative-approach" class="md-nav__link">
+    <span class="md-ellipsis">
+      Cooperative Approach
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#non-cooperative-approach" class="md-nav__link">
+    <span class="md-ellipsis">
+      Non Cooperative Approach
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#context-switching-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      Context Switching (Steps)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scheduling-based-on-turnaround-time" class="md-nav__link">
+    <span class="md-ellipsis">
+      Scheduling (based on Turnaround Time)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Scheduling (based on Turnaround Time)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#turnaround-time" class="md-nav__link">
+    <span class="md-ellipsis">
+      Turnaround Time
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fairness-in-context-of-scheduling" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fairness (in context of scheduling)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fifo-first-in-first-out" class="md-nav__link">
+    <span class="md-ellipsis">
+      FIFO (First in, First Out)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sjf-shortest-job-first" class="md-nav__link">
+    <span class="md-ellipsis">
+      SJF (Shortest Job First)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stfc-shortest-time-to-completion-first" class="md-nav__link">
+    <span class="md-ellipsis">
+      STFC (Shortest Time-to-Completion First)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scheduling-based-on-response-time" class="md-nav__link">
+    <span class="md-ellipsis">
+      Scheduling (based on Response Time)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Scheduling (based on Response Time)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#response-time" class="md-nav__link">
+    <span class="md-ellipsis">
+      Response Time
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rr-round-robin-scheduling" class="md-nav__link">
+    <span class="md-ellipsis">
+      RR (Round Robin) scheduling
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#context-switch-cost" class="md-nav__link">
+    <span class="md-ellipsis">
+      Context Switch Cost
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#time-slice-length" class="md-nav__link">
+    <span class="md-ellipsis">
+      Time Slice Length
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#managing-io-with-stfc" class="md-nav__link">
+    <span class="md-ellipsis">
+      Managing I/O (with STFC)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#multilevel-feedback-queue-mlfq" class="md-nav__link">
+    <span class="md-ellipsis">
+      Multilevel Feedback Queue (MLFQ)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Multilevel Feedback Queue (MLFQ)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#queues" class="md-nav__link">
+    <span class="md-ellipsis">
+      Queues
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#priority" class="md-nav__link">
+    <span class="md-ellipsis">
+      Priority
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#changing-priorities" class="md-nav__link">
+    <span class="md-ellipsis">
+      Changing Priorities
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#priority-and-io" class="md-nav__link">
+    <span class="md-ellipsis">
+      Priority and I/O
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#problems_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Problems
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#priority-boost-fixing-problem-1-3" class="md-nav__link">
+    <span class="md-ellipsis">
+      Priority Boost (Fixing Problem 1 &amp; 3)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#better-accounting-fix-problem-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Better Accounting (Fix Problem 2)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mlfq-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      MLFQ Summary
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#proportional-share-lottery-scheduling" class="md-nav__link">
+    <span class="md-ellipsis">
+      Proportional-Share - Lottery Scheduling
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Proportional-Share - Lottery Scheduling">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tickets" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tickets
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Implementation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fairness" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fairness
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#problem" class="md-nav__link">
+    <span class="md-ellipsis">
+      Problem
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#stride-scheduling" class="md-nav__link">
+    <span class="md-ellipsis">
+      Stride Scheduling
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Stride Scheduling">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#stride" class="md-nav__link">
+    <span class="md-ellipsis">
+      Stride
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-lottery-when-stride" class="md-nav__link">
+    <span class="md-ellipsis">
+      Why Lottery when Stride?
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#linux-completely-fair-scheduler-cfs" class="md-nav__link">
+    <span class="md-ellipsis">
+      Linux Completely Fair Scheduler (CFS)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Linux Completely Fair Scheduler (CFS)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#virtual-runtime-vruntime" class="md-nav__link">
+    <span class="md-ellipsis">
+      Virtual Runtime (vruntime)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-to-switch" class="md-nav__link">
+    <span class="md-ellipsis">
+      When to switch?
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#weighting-niceness" class="md-nav__link">
+    <span class="md-ellipsis">
+      Weighting (Niceness)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#data-structures-efficiency" class="md-nav__link">
+    <span class="md-ellipsis">
+      Data Structures - Efficiency
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#multiprogramming-and-time-sharing" class="md-nav__link">
+    <span class="md-ellipsis">
+      Multiprogramming and Time Sharing
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Multiprogramming and Time Sharing">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#problem_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Problem
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#address-spaces" class="md-nav__link">
+    <span class="md-ellipsis">
+      Address Spaces
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#virtual-address-space" class="md-nav__link">
+    <span class="md-ellipsis">
+      Virtual Address Space
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Virtual Address Space">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#components-of-virtual-address-space" class="md-nav__link">
+    <span class="md-ellipsis">
+      Components of Virtual Address Space
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#address-translation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Address Translation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dynamic-reallocation-base-bound" class="md-nav__link">
+    <span class="md-ellipsis">
+      Dynamic Reallocation - (Base &amp; Bound)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Dynamic Reallocation - (Base & Bound)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#storing-bound-register-2-ways" class="md-nav__link">
+    <span class="md-ellipsis">
+      Storing Bound Register (2 ways)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#context-switching" class="md-nav__link">
+    <span class="md-ellipsis">
+      Context Switching
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#problems_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Problems
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#segmentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Segmentation
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Segmentation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#translation-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      Translation (code)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#translation-heap" class="md-nav__link">
+    <span class="md-ellipsis">
+      Translation (heap)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#which-segment-are-we-referring-to" class="md-nav__link">
+    <span class="md-ellipsis">
+      Which Segment Are We Referring To?
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stack-and-segments" class="md-nav__link">
+    <span class="md-ellipsis">
+      Stack and Segments
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#support-for-sharing" class="md-nav__link">
+    <span class="md-ellipsis">
+      Support for Sharing
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fine-grained-vs-coarse-grained" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fine-grained vs Coarse-grained
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fragmentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fragmentation
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#free-space-in-context-of-user-managed-memory" class="md-nav__link">
+    <span class="md-ellipsis">
+      Free Space (in context of user-managed memory)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#splitting-and-coalescing" class="md-nav__link">
+    <span class="md-ellipsis">
+      Splitting and Coalescing
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Splitting and Coalescing">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#splitting" class="md-nav__link">
+    <span class="md-ellipsis">
+      Splitting
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#coalescing" class="md-nav__link">
+    <span class="md-ellipsis">
+      Coalescing
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-does-free-know-how-much-to-free" class="md-nav__link">
+    <span class="md-ellipsis">
+      How does free() know how much to free?
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#embedding-free-list" class="md-nav__link">
+    <span class="md-ellipsis">
+      Embedding free list
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ran-out-of-heap" class="md-nav__link">
+    <span class="md-ellipsis">
+      Ran out of heap
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#basic-strategies" class="md-nav__link">
+    <span class="md-ellipsis">
+      Basic Strategies
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Basic Strategies">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#best-fit" class="md-nav__link">
+    <span class="md-ellipsis">
+      Best fit
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#worst-fit" class="md-nav__link">
+    <span class="md-ellipsis">
+      Worst fit
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#first-fit" class="md-nav__link">
+    <span class="md-ellipsis">
+      First Fit
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#advanced-strategies" class="md-nav__link">
+    <span class="md-ellipsis">
+      Advanced Strategies
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Advanced Strategies">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#segregates-lists" class="md-nav__link">
+    <span class="md-ellipsis">
+      Segregates Lists
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#buddy-allocation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Buddy Allocation
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Buddy Allocation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#slicing" class="md-nav__link">
+    <span class="md-ellipsis">
+      Slicing
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#coalescing_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Coalescing
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#problems_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      Problems
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#paging" class="md-nav__link">
+    <span class="md-ellipsis">
+      Paging
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Paging">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#review-base-bound" class="md-nav__link">
+    <span class="md-ellipsis">
+      Review: Base Bound
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#review-segmentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Review: Segmentation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paging-intro" class="md-nav__link">
+    <span class="md-ellipsis">
+      Paging - INTRO
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#problem-paging-will-solve" class="md-nav__link">
+    <span class="md-ellipsis">
+      Problem Paging will solve
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#page-table" class="md-nav__link">
+    <span class="md-ellipsis">
+      Page Table
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Page Table">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#address-translation_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Address Translation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vpn-and-offset" class="md-nav__link">
+    <span class="md-ellipsis">
+      VPN and Offset
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#page-tables-are-large" class="md-nav__link">
+    <span class="md-ellipsis">
+      Page Tables are large
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#contents-of-page-tables-pte" class="md-nav__link">
+    <span class="md-ellipsis">
+      Contents of Page Tables &amp; PTE
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#page-tables-are-slow" class="md-nav__link">
+    <span class="md-ellipsis">
+      Page Tables are Slow
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tlbtranslation-lookaside-buffer-faster-translations" class="md-nav__link">
+    <span class="md-ellipsis">
+      TLB(translation-lookaside buffer) - Faster Translations
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="TLB(translation-lookaside buffer) - Faster Translations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#who-handles-the-tlb-miss" class="md-nav__link">
+    <span class="md-ellipsis">
+      Who Handles The TLB Miss?
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Who Handles The TLB Miss?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cisc-hardware-managed-tlb-tables" class="md-nav__link">
+    <span class="md-ellipsis">
+      CISC &amp; Hardware Managed TLB Tables
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#risc-software-managed-tlb-tables" class="md-nav__link">
+    <span class="md-ellipsis">
+      RISC &amp; Software Managed TLB Tables
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tlb-contents" class="md-nav__link">
+    <span class="md-ellipsis">
+      TLB Contents
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tlb-context-switching" class="md-nav__link">
+    <span class="md-ellipsis">
+      TLB &amp; Context Switching
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="TLB & Context Switching">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#flush-tlb" class="md-nav__link">
+    <span class="md-ellipsis">
+      Flush TLB
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#asid-address-space-identifier" class="md-nav__link">
+    <span class="md-ellipsis">
+      ASID (address space identifier)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tlb-replacement-policy" class="md-nav__link">
+    <span class="md-ellipsis">
+      TLB &amp; Replacement Policy
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="TLB & Replacement Policy">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#lru-least-recently-used" class="md-nav__link">
+    <span class="md-ellipsis">
+      LRU (least recently used)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#random-policy" class="md-nav__link">
+    <span class="md-ellipsis">
+      Random Policy
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tlb-entry" class="md-nav__link">
+    <span class="md-ellipsis">
+      TLB Entry
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#smaller-tables" class="md-nav__link">
+    <span class="md-ellipsis">
+      Smaller Tables
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Smaller Tables">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#strawman-bigger-pages" class="md-nav__link">
+    <span class="md-ellipsis">
+      Strawman: Bigger Pages
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hybrid-approach-paging-segmentation-intuition" class="md-nav__link">
+    <span class="md-ellipsis">
+      Hybrid Approach: Paging + Segmentation (Intuition)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#segmentation-walkthrough" class="md-nav__link">
+    <span class="md-ellipsis">
+      Segmentation Walkthrough
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multi-level-page-tables" class="md-nav__link">
+    <span class="md-ellipsis">
+      Multi-level Page Tables
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#page-directory" class="md-nav__link">
+    <span class="md-ellipsis">
+      Page Directory
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#more-than-2-levels" class="md-nav__link">
+    <span class="md-ellipsis">
+      More than 2 levels
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#inverted-page-tables" class="md-nav__link">
+    <span class="md-ellipsis">
+      Inverted Page Tables
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#swapping" class="md-nav__link">
+    <span class="md-ellipsis">
+      Swapping
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#swap-space" class="md-nav__link">
+    <span class="md-ellipsis">
+      Swap Space
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Swap Space">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-present-bit-tlb" class="md-nav__link">
+    <span class="md-ellipsis">
+      The Present Bit - TLB
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#page-fault-handler" class="md-nav__link">
+    <span class="md-ellipsis">
+      Page Fault Handler
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Page Fault Handler">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#when-to-preform-replacement" class="md-nav__link">
+    <span class="md-ellipsis">
+      When to preform replacement?
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="When to preform replacement?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#lazy-approach" class="md-nav__link">
+    <span class="md-ellipsis">
+      Lazy Approach
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#proactive-approach" class="md-nav__link">
+    <span class="md-ellipsis">
+      Proactive Approach
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#page-replacement-policy" class="md-nav__link">
+    <span class="md-ellipsis">
+      Page Replacement Policy
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Page Replacement Policy">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#optimal-swapping-policy" class="md-nav__link">
+    <span class="md-ellipsis">
+      Optimal Swapping Policy
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fifo" class="md-nav__link">
+    <span class="md-ellipsis">
+      FIFO
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#random" class="md-nav__link">
+    <span class="md-ellipsis">
+      Random
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lru-least-recently-used_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      LRU - Least Recently Used
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lfu-least-frequently-used" class="md-nav__link">
+    <span class="md-ellipsis">
+      LFU - Least Frequently Used
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#workload-examples-notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Workload Examples - Notes
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#approximating-lru-use-bit" class="md-nav__link">
+    <span class="md-ellipsis">
+      Approximating LRU &amp; Use bit
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Approximating LRU & Use bit">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#clock-algorithm" class="md-nav__link">
+    <span class="md-ellipsis">
+      Clock Algorithm
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#thrashing" class="md-nav__link">
+    <span class="md-ellipsis">
+      Thrashing
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20-persistence/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Persistence
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../30-concurrency/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Concurrency
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#key-points" class="md-nav__link">
+    <span class="md-ellipsis">
+      Key points
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#virtualizing-cpu" class="md-nav__link">
+    <span class="md-ellipsis">
+      Virtualizing CPU
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Virtualizing CPU">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#time-sharing-vs-space-sharing" class="md-nav__link">
+    <span class="md-ellipsis">
+      Time Sharing vs Space Sharing
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#program-sate" class="md-nav__link">
+    <span class="md-ellipsis">
+      Program Sate
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Program Sate">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#address-space" class="md-nav__link">
+    <span class="md-ellipsis">
+      Address Space
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#registers" class="md-nav__link">
+    <span class="md-ellipsis">
+      Registers
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#io-information" class="md-nav__link">
+    <span class="md-ellipsis">
+      I/O Information
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#context-switching-basics" class="md-nav__link">
+    <span class="md-ellipsis">
+      Context Switching (Basics)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Context Switching (Basics)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#program-control-block-pcb" class="md-nav__link">
+    <span class="md-ellipsis">
+      Program Control Block (PCB)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#switching" class="md-nav__link">
+    <span class="md-ellipsis">
+      Switching
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-often-to-context-switch" class="md-nav__link">
+    <span class="md-ellipsis">
+      How often to context switch?
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#process-states" class="md-nav__link">
+    <span class="md-ellipsis">
+      Process States
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Process States">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#running" class="md-nav__link">
+    <span class="md-ellipsis">
+      Running
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ready" class="md-nav__link">
+    <span class="md-ellipsis">
+      Ready
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#blocked" class="md-nav__link">
+    <span class="md-ellipsis">
+      Blocked
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scheduling-de-scheduling" class="md-nav__link">
+    <span class="md-ellipsis">
+      Scheduling &amp; De-scheduling
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#process-creation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Process Creation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#processes-in-linux" class="md-nav__link">
+    <span class="md-ellipsis">
+      Processes in Linux
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#process-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      Process API
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Process API">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-does-exec-work" class="md-nav__link">
+    <span class="md-ellipsis">
+      How does exec() work?
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#resource-protection" class="md-nav__link">
+    <span class="md-ellipsis">
+      Resource Protection
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Resource Protection">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#direct-execution" class="md-nav__link">
+    <span class="md-ellipsis">
+      Direct Execution
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Direct Execution">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#problems" class="md-nav__link">
+    <span class="md-ellipsis">
+      Problems
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#limited-direct-execution" class="md-nav__link">
+    <span class="md-ellipsis">
+      Limited Direct Execution
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Limited Direct Execution">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mode-bit" class="md-nav__link">
+    <span class="md-ellipsis">
+      Mode Bit
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#trap" class="md-nav__link">
+    <span class="md-ellipsis">
+      trap
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-does-trap-work" class="md-nav__link">
+    <span class="md-ellipsis">
+      How does trap work?
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#switching-between-processes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Switching Between Processes
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Switching Between Processes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cooperative-approach" class="md-nav__link">
+    <span class="md-ellipsis">
+      Cooperative Approach
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#non-cooperative-approach" class="md-nav__link">
+    <span class="md-ellipsis">
+      Non Cooperative Approach
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#context-switching-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      Context Switching (Steps)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scheduling-based-on-turnaround-time" class="md-nav__link">
+    <span class="md-ellipsis">
+      Scheduling (based on Turnaround Time)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Scheduling (based on Turnaround Time)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#turnaround-time" class="md-nav__link">
+    <span class="md-ellipsis">
+      Turnaround Time
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fairness-in-context-of-scheduling" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fairness (in context of scheduling)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fifo-first-in-first-out" class="md-nav__link">
+    <span class="md-ellipsis">
+      FIFO (First in, First Out)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sjf-shortest-job-first" class="md-nav__link">
+    <span class="md-ellipsis">
+      SJF (Shortest Job First)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stfc-shortest-time-to-completion-first" class="md-nav__link">
+    <span class="md-ellipsis">
+      STFC (Shortest Time-to-Completion First)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scheduling-based-on-response-time" class="md-nav__link">
+    <span class="md-ellipsis">
+      Scheduling (based on Response Time)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Scheduling (based on Response Time)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#response-time" class="md-nav__link">
+    <span class="md-ellipsis">
+      Response Time
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rr-round-robin-scheduling" class="md-nav__link">
+    <span class="md-ellipsis">
+      RR (Round Robin) scheduling
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#context-switch-cost" class="md-nav__link">
+    <span class="md-ellipsis">
+      Context Switch Cost
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#time-slice-length" class="md-nav__link">
+    <span class="md-ellipsis">
+      Time Slice Length
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#managing-io-with-stfc" class="md-nav__link">
+    <span class="md-ellipsis">
+      Managing I/O (with STFC)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#multilevel-feedback-queue-mlfq" class="md-nav__link">
+    <span class="md-ellipsis">
+      Multilevel Feedback Queue (MLFQ)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Multilevel Feedback Queue (MLFQ)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#queues" class="md-nav__link">
+    <span class="md-ellipsis">
+      Queues
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#priority" class="md-nav__link">
+    <span class="md-ellipsis">
+      Priority
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#changing-priorities" class="md-nav__link">
+    <span class="md-ellipsis">
+      Changing Priorities
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#priority-and-io" class="md-nav__link">
+    <span class="md-ellipsis">
+      Priority and I/O
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#problems_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Problems
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#priority-boost-fixing-problem-1-3" class="md-nav__link">
+    <span class="md-ellipsis">
+      Priority Boost (Fixing Problem 1 &amp; 3)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#better-accounting-fix-problem-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Better Accounting (Fix Problem 2)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mlfq-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      MLFQ Summary
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#proportional-share-lottery-scheduling" class="md-nav__link">
+    <span class="md-ellipsis">
+      Proportional-Share - Lottery Scheduling
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Proportional-Share - Lottery Scheduling">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tickets" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tickets
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Implementation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fairness" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fairness
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#problem" class="md-nav__link">
+    <span class="md-ellipsis">
+      Problem
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#stride-scheduling" class="md-nav__link">
+    <span class="md-ellipsis">
+      Stride Scheduling
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Stride Scheduling">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#stride" class="md-nav__link">
+    <span class="md-ellipsis">
+      Stride
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-lottery-when-stride" class="md-nav__link">
+    <span class="md-ellipsis">
+      Why Lottery when Stride?
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#linux-completely-fair-scheduler-cfs" class="md-nav__link">
+    <span class="md-ellipsis">
+      Linux Completely Fair Scheduler (CFS)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Linux Completely Fair Scheduler (CFS)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#virtual-runtime-vruntime" class="md-nav__link">
+    <span class="md-ellipsis">
+      Virtual Runtime (vruntime)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-to-switch" class="md-nav__link">
+    <span class="md-ellipsis">
+      When to switch?
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#weighting-niceness" class="md-nav__link">
+    <span class="md-ellipsis">
+      Weighting (Niceness)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#data-structures-efficiency" class="md-nav__link">
+    <span class="md-ellipsis">
+      Data Structures - Efficiency
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#multiprogramming-and-time-sharing" class="md-nav__link">
+    <span class="md-ellipsis">
+      Multiprogramming and Time Sharing
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Multiprogramming and Time Sharing">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#problem_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Problem
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#address-spaces" class="md-nav__link">
+    <span class="md-ellipsis">
+      Address Spaces
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#virtual-address-space" class="md-nav__link">
+    <span class="md-ellipsis">
+      Virtual Address Space
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Virtual Address Space">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#components-of-virtual-address-space" class="md-nav__link">
+    <span class="md-ellipsis">
+      Components of Virtual Address Space
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#address-translation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Address Translation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dynamic-reallocation-base-bound" class="md-nav__link">
+    <span class="md-ellipsis">
+      Dynamic Reallocation - (Base &amp; Bound)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Dynamic Reallocation - (Base & Bound)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#storing-bound-register-2-ways" class="md-nav__link">
+    <span class="md-ellipsis">
+      Storing Bound Register (2 ways)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#context-switching" class="md-nav__link">
+    <span class="md-ellipsis">
+      Context Switching
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#problems_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Problems
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#segmentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Segmentation
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Segmentation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#translation-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      Translation (code)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#translation-heap" class="md-nav__link">
+    <span class="md-ellipsis">
+      Translation (heap)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#which-segment-are-we-referring-to" class="md-nav__link">
+    <span class="md-ellipsis">
+      Which Segment Are We Referring To?
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stack-and-segments" class="md-nav__link">
+    <span class="md-ellipsis">
+      Stack and Segments
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#support-for-sharing" class="md-nav__link">
+    <span class="md-ellipsis">
+      Support for Sharing
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fine-grained-vs-coarse-grained" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fine-grained vs Coarse-grained
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fragmentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fragmentation
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#free-space-in-context-of-user-managed-memory" class="md-nav__link">
+    <span class="md-ellipsis">
+      Free Space (in context of user-managed memory)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#splitting-and-coalescing" class="md-nav__link">
+    <span class="md-ellipsis">
+      Splitting and Coalescing
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Splitting and Coalescing">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#splitting" class="md-nav__link">
+    <span class="md-ellipsis">
+      Splitting
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#coalescing" class="md-nav__link">
+    <span class="md-ellipsis">
+      Coalescing
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-does-free-know-how-much-to-free" class="md-nav__link">
+    <span class="md-ellipsis">
+      How does free() know how much to free?
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#embedding-free-list" class="md-nav__link">
+    <span class="md-ellipsis">
+      Embedding free list
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ran-out-of-heap" class="md-nav__link">
+    <span class="md-ellipsis">
+      Ran out of heap
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#basic-strategies" class="md-nav__link">
+    <span class="md-ellipsis">
+      Basic Strategies
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Basic Strategies">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#best-fit" class="md-nav__link">
+    <span class="md-ellipsis">
+      Best fit
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#worst-fit" class="md-nav__link">
+    <span class="md-ellipsis">
+      Worst fit
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#first-fit" class="md-nav__link">
+    <span class="md-ellipsis">
+      First Fit
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#advanced-strategies" class="md-nav__link">
+    <span class="md-ellipsis">
+      Advanced Strategies
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Advanced Strategies">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#segregates-lists" class="md-nav__link">
+    <span class="md-ellipsis">
+      Segregates Lists
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#buddy-allocation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Buddy Allocation
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Buddy Allocation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#slicing" class="md-nav__link">
+    <span class="md-ellipsis">
+      Slicing
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#coalescing_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Coalescing
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#problems_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      Problems
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#paging" class="md-nav__link">
+    <span class="md-ellipsis">
+      Paging
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Paging">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#review-base-bound" class="md-nav__link">
+    <span class="md-ellipsis">
+      Review: Base Bound
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#review-segmentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Review: Segmentation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paging-intro" class="md-nav__link">
+    <span class="md-ellipsis">
+      Paging - INTRO
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#problem-paging-will-solve" class="md-nav__link">
+    <span class="md-ellipsis">
+      Problem Paging will solve
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#page-table" class="md-nav__link">
+    <span class="md-ellipsis">
+      Page Table
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Page Table">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#address-translation_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Address Translation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vpn-and-offset" class="md-nav__link">
+    <span class="md-ellipsis">
+      VPN and Offset
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#page-tables-are-large" class="md-nav__link">
+    <span class="md-ellipsis">
+      Page Tables are large
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#contents-of-page-tables-pte" class="md-nav__link">
+    <span class="md-ellipsis">
+      Contents of Page Tables &amp; PTE
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#page-tables-are-slow" class="md-nav__link">
+    <span class="md-ellipsis">
+      Page Tables are Slow
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tlbtranslation-lookaside-buffer-faster-translations" class="md-nav__link">
+    <span class="md-ellipsis">
+      TLB(translation-lookaside buffer) - Faster Translations
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="TLB(translation-lookaside buffer) - Faster Translations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#who-handles-the-tlb-miss" class="md-nav__link">
+    <span class="md-ellipsis">
+      Who Handles The TLB Miss?
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Who Handles The TLB Miss?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cisc-hardware-managed-tlb-tables" class="md-nav__link">
+    <span class="md-ellipsis">
+      CISC &amp; Hardware Managed TLB Tables
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#risc-software-managed-tlb-tables" class="md-nav__link">
+    <span class="md-ellipsis">
+      RISC &amp; Software Managed TLB Tables
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tlb-contents" class="md-nav__link">
+    <span class="md-ellipsis">
+      TLB Contents
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tlb-context-switching" class="md-nav__link">
+    <span class="md-ellipsis">
+      TLB &amp; Context Switching
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="TLB & Context Switching">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#flush-tlb" class="md-nav__link">
+    <span class="md-ellipsis">
+      Flush TLB
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#asid-address-space-identifier" class="md-nav__link">
+    <span class="md-ellipsis">
+      ASID (address space identifier)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tlb-replacement-policy" class="md-nav__link">
+    <span class="md-ellipsis">
+      TLB &amp; Replacement Policy
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="TLB & Replacement Policy">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#lru-least-recently-used" class="md-nav__link">
+    <span class="md-ellipsis">
+      LRU (least recently used)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#random-policy" class="md-nav__link">
+    <span class="md-ellipsis">
+      Random Policy
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tlb-entry" class="md-nav__link">
+    <span class="md-ellipsis">
+      TLB Entry
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#smaller-tables" class="md-nav__link">
+    <span class="md-ellipsis">
+      Smaller Tables
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Smaller Tables">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#strawman-bigger-pages" class="md-nav__link">
+    <span class="md-ellipsis">
+      Strawman: Bigger Pages
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hybrid-approach-paging-segmentation-intuition" class="md-nav__link">
+    <span class="md-ellipsis">
+      Hybrid Approach: Paging + Segmentation (Intuition)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#segmentation-walkthrough" class="md-nav__link">
+    <span class="md-ellipsis">
+      Segmentation Walkthrough
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multi-level-page-tables" class="md-nav__link">
+    <span class="md-ellipsis">
+      Multi-level Page Tables
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#page-directory" class="md-nav__link">
+    <span class="md-ellipsis">
+      Page Directory
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#more-than-2-levels" class="md-nav__link">
+    <span class="md-ellipsis">
+      More than 2 levels
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#inverted-page-tables" class="md-nav__link">
+    <span class="md-ellipsis">
+      Inverted Page Tables
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#swapping" class="md-nav__link">
+    <span class="md-ellipsis">
+      Swapping
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#swap-space" class="md-nav__link">
+    <span class="md-ellipsis">
+      Swap Space
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Swap Space">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-present-bit-tlb" class="md-nav__link">
+    <span class="md-ellipsis">
+      The Present Bit - TLB
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#page-fault-handler" class="md-nav__link">
+    <span class="md-ellipsis">
+      Page Fault Handler
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Page Fault Handler">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#when-to-preform-replacement" class="md-nav__link">
+    <span class="md-ellipsis">
+      When to preform replacement?
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="When to preform replacement?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#lazy-approach" class="md-nav__link">
+    <span class="md-ellipsis">
+      Lazy Approach
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#proactive-approach" class="md-nav__link">
+    <span class="md-ellipsis">
+      Proactive Approach
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#page-replacement-policy" class="md-nav__link">
+    <span class="md-ellipsis">
+      Page Replacement Policy
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Page Replacement Policy">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#optimal-swapping-policy" class="md-nav__link">
+    <span class="md-ellipsis">
+      Optimal Swapping Policy
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fifo" class="md-nav__link">
+    <span class="md-ellipsis">
+      FIFO
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#random" class="md-nav__link">
+    <span class="md-ellipsis">
+      Random
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lru-least-recently-used_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      LRU - Least Recently Used
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lfu-least-frequently-used" class="md-nav__link">
+    <span class="md-ellipsis">
+      LFU - Least Frequently Used
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#workload-examples-notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Workload Examples - Notes
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#approximating-lru-use-bit" class="md-nav__link">
+    <span class="md-ellipsis">
+      Approximating LRU &amp; Use bit
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Approximating LRU & Use bit">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#clock-algorithm" class="md-nav__link">
+    <span class="md-ellipsis">
+      Clock Algorithm
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#thrashing" class="md-nav__link">
+    <span class="md-ellipsis">
+      Thrashing
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+<h1 id="virtualization">Virtualization</h1>
+<h2 id="key-points">Key points</h2>
+<ul>
+<li>OS provides a batch of virtual memory to all programs. This means that two programs, in their own context, can have the same address for a variable, but in reality the addresses are being translated by the OS.</li>
+<li>Why virtual memory?<ul>
+<li>Memory protection becomes easier.</li>
+<li>Decoupling makes management simple.</li>
+<li>Space sharing - running two 3GB program with only 4 GBs RAM</li>
+</ul>
+</li>
+</ul>
+<h2 id="virtualizing-cpu">Virtualizing CPU</h2>
+<ul>
+<li>CPUs are virtualized using Time Sharing.</li>
+<li>Time Sharing is running a process, pausing it and then running another process.</li>
+</ul>
+<h3 id="time-sharing-vs-space-sharing">Time Sharing vs Space Sharing</h3>
+<ul>
+<li>
+<p>Time Sharing is allowing the resource to be used for a little while by one entity, and then a little while by another, and so forth.</p>
+</li>
+<li>
+<p>Space Sharing, where a resource is divided (in space) among those who wish to use it. For example, disk space is naturally a spaceshared resource; once a block is assigned to a file, it is normally not assigned to another file until the user deletes the original file</p>
+</li>
+</ul>
+<h2 id="program-sate">Program Sate</h2>
+<ul>
+<li>Everything that a program needs and uses to execute.</li>
+</ul>
+<p><img alt="Untitled" src="../img/Untitled.png" /></p>
+<h3 id="address-space">Address Space</h3>
+<ul>
+<li>What a program can read or update in memory (RAM) when it is running.</li>
+</ul>
+<h3 id="registers">Registers</h3>
+<ul>
+<li>Program counter</li>
+<li>Stack Pointers</li>
+<li>Primitive Registers</li>
+</ul>
+<h3 id="io-information">I/O Information</h3>
+<ul>
+<li>File descriptor table</li>
+</ul>
+<h2 id="context-switching-basics">Context Switching (Basics)</h2>
+<ul>
+<li>Context Switching is implemented by saving and loading the program states of different programs.</li>
+</ul>
+<h3 id="program-control-block-pcb">Program Control Block (PCB)</h3>
+<ul>
+<li>A list of structs of all the relevant information (program state) about a process.</li>
+</ul>
+<h3 id="switching">Switching</h3>
+<ul>
+<li>PCBs are used for context switching. One programs PCB is saved and another programs PCB is loaded to switch the context.</li>
+<li>It takes time to change context, so it is not trivial to decide whether to switch the context or not.</li>
+</ul>
+<h3 id="how-often-to-context-switch">How often to context switch?</h3>
+<p><img alt="Untitled" src="../img/Untitled%201.png" /></p>
+<hr />
+<h2 id="process-states">Process States</h2>
+<p><img alt="Untitled" src="../img/Untitled%202.png" /></p>
+<h3 id="running">Running</h3>
+<ul>
+<li>A process is running on the processor.</li>
+</ul>
+<h3 id="ready">Ready</h3>
+<ul>
+<li>Process is ready to run on the processor but for some reason the IS has chosen not to run it.</li>
+</ul>
+<h3 id="blocked">Blocked</h3>
+<ul>
+<li>A process has performed some kind of operation that makes it not ready to run until some other event takes place.</li>
+<li>Example: Waiting for an I/O operation to complete.</li>
+</ul>
+<h3 id="scheduling-de-scheduling">Scheduling &amp; De-scheduling</h3>
+<ul>
+<li>Being moved from ready to running means the process has been <strong>scheduled</strong>.</li>
+<li>Being moved from running to ready means the process has been <strong>de-scheduled</strong>.</li>
+</ul>
+<h2 id="process-creation">Process Creation</h2>
+<ol>
+<li>Load a program code into memory, into the address space of the process<ul>
+<li>Programs initially reside on disk in executable format.</li>
+<li>OS perform the loading process lazily. (Loading pieces of code or data only as they are needed during program execution.)</li>
+</ul>
+</li>
+<li>The program’s run-time stack is allocated.<ul>
+<li>Use the stack for local variables, function parameters, and return address.</li>
+<li>Initialize the stack with arguments → <code>argc</code> and the <code>argv</code> array of <code>main()</code> function.</li>
+</ul>
+</li>
+<li>The programs heap memory is initialized.<ul>
+<li>Used for explicitly requested dynamically allocated data.</li>
+<li>Program request such space by calling <code>malloc()</code> and free it by calling <code>free()</code>.</li>
+</ul>
+</li>
+<li>Initialize I/O; File descriptors → <code>STDIN</code>, <code>STDOUT</code> and <code>STDERR</code></li>
+<li>Start the program running at the entry point, namely <code>main()</code>.<ul>
+<li>The OS transfers control of the CPU to the newly-created process.</li>
+</ul>
+</li>
+</ol>
+<h2 id="processes-in-linux">Processes in Linux</h2>
+<ul>
+<li>In linux the processes are called <strong><em>tasks</em></strong>.</li>
+<li>The linux kernel stores the tasks in a circular doubly linked list called <strong><em>task list</em>.</strong></li>
+<li>Each element in the list is a process descriptor of type <code>struct task_struct</code> defined in <code>linux/sched.h</code></li>
+</ul>
+<h2 id="process-api">Process API</h2>
+<ul>
+<li><code>fork()</code></li>
+<li><code>exec()</code></li>
+<li><code>wait()</code></li>
+</ul>
+<h3 id="how-does-exec-work">How does <code>exec()</code> work?</h3>
+<ul>
+<li>If exec successfully parsers, it <strong>replaces</strong> the the current process with a new process (one passed through args) and execution continues from the main of the new program.</li>
+<li>The complete memory of the calling process is replaced except the file descriptors.</li>
+</ul>
+<h2 id="resource-protection">Resource Protection</h2>
+<h3 id="direct-execution">Direct Execution</h3>
+<ul>
+<li>Just run the program directly on the CPU.</li>
+<li>This technique is simple and results in amazingly fast program execution, but this way the program runs with no restriction i.e. having full control of the CPU, memory and IO resources.</li>
+</ul>
+<p><img alt="Untitled" src="../img/Untitled%203.png" /></p>
+<h4 id="problems">Problems</h4>
+<ul>
+<li>Monopolize system resources - CPU</li>
+<li>Uncontrollable access to I/O</li>
+<li>Illegal memory access</li>
+</ul>
+<h3 id="limited-direct-execution">Limited Direct Execution</h3>
+<ul>
+<li>What we want is to allow a process to perform I/O and some other restricted operations, but without giving the process complete control over the system.</li>
+<li>A <strong>mode bit</strong> specifies a programs privileges and is used to transfer resource control in a protected way to the process.</li>
+</ul>
+<h4 id="mode-bit">Mode Bit</h4>
+<ul>
+<li>User mode → Hardware<ul>
+<li>Applications do not have full access to hardware resources (Can only manipulate assigned memory but nothing more)</li>
+</ul>
+</li>
+<li>Kernel mode → Hardware<ul>
+<li>Access to all the resources of the machine.</li>
+</ul>
+</li>
+<li>System Call is the boundary between these modes; it transfers control between user mode and kernel mode.</li>
+<li>Upon creation of a process, each process gets a <strong><em>kernel stack</em></strong> and a <strong><em>user stack</em></strong>.<ul>
+<li>The user stack is used for normal program execution.</li>
+<li>The kernel stack is used when the OS is serving a system call from that process.</li>
+</ul>
+</li>
+</ul>
+<h4 id="trap"><code>trap</code></h4>
+<ul>
+<li>To execute a system call, a process must execute a special <code>trap</code> instruction with a <strong>system-call-number</strong></li>
+<li>The <code>trap</code> instruction:<ul>
+<li>Jumps into kernel and set the bit to kernel mode</li>
+<li>Pushes the registers on to the process’s kernel stack</li>
+</ul>
+</li>
+<li>OS performs the requested service in privileged mode</li>
+<li>OS calls a <code>return-from-trap</code> instruction<ul>
+<li>Return to caller process and set the bit to user mode</li>
+<li>Pop the register values from the process’s kernel stack</li>
+</ul>
+</li>
+</ul>
+<h4 id="how-does-trap-work">How does <code>trap</code> work?</h4>
+<ul>
+<li>OS sets up a trap table at boot time in privileged mode and registers it with the hardware.</li>
+<li>The trap table tells the hardware knows that given a <strong>system-call number,</strong> what specific block of instruction to jump to and execute.</li>
+<li>A <strong>System-call number</strong> is assigned to each <strong>system call</strong> which acts like a kind of an index in the trap table.</li>
+<li>OS examines this number, ensures its valid, executes the corresponding code</li>
+<li>User can only specify the call number and does not know where to jump to - Protection of OS memory</li>
+</ul>
+<p><img alt="Untitled" src="../img/Untitled%204.png" /></p>
+<h2 id="switching-between-processes">Switching Between Processes</h2>
+<h3 id="cooperative-approach">Cooperative Approach</h3>
+<ul>
+<li>OS trusts the processes to periodically give up CPU by:<ul>
+<li>making a system call</li>
+<li>doing something illegal (illegal memory access)</li>
+</ul>
+</li>
+</ul>
+<h3 id="non-cooperative-approach">Non Cooperative Approach</h3>
+<ul>
+<li>During the boot sequence, the OS starts a timer.</li>
+<li>The timer raises an interrupt every few milliseconds.</li>
+<li>On a timer interrupt:<ul>
+<li>The currently running process is halted.</li>
+<li>A pre-configured interrupt (trap) handler in the OS runs.</li>
+<li>CPU control is given up by the program.</li>
+</ul>
+</li>
+</ul>
+<h3 id="context-switching-steps">Context Switching (Steps)</h3>
+<ol>
+<li>Time interrupt fires – like the execution of a trap instruction.</li>
+<li>Save user register values of Process A on to its kernel stack.</li>
+<li>Handle the trap – switch().</li>
+<li>Save the kernel register values of the Process A in the PCB.</li>
+<li>Restore the kernel register values of the Process B from the PCB.</li>
+<li>Execute return-from-trap.</li>
+</ol>
+<p><img alt="Untitled" src="../img/Untitled%205.png" /></p>
+<h2 id="scheduling-based-on-turnaround-time">Scheduling (based on Turnaround Time)</h2>
+<h3 id="turnaround-time">Turnaround Time</h3>
+<div class="arithmatex">\[
+T_{turnaround} = T_{completion} - T_{arrival}
+\]</div>
+<h3 id="fairness-in-context-of-scheduling">Fairness (in context of scheduling)</h3>
+<ul>
+<li>Every workload gets an equal Turnaround Time.</li>
+</ul>
+<h3 id="fifo-first-in-first-out">FIFO (First in, First Out)</h3>
+<ul>
+<li>
+<p>First Come, First Served</p>
+<p><img alt="Untitled" src="../img/Untitled%206.png" /></p>
+</li>
+<li>
+<p>Performs poorly if the first process runs for a long time.</p>
+</li>
+</ul>
+<p><img alt="Untitled" src="../img/Untitled%207.png" /></p>
+<h3 id="sjf-shortest-job-first">SJF (Shortest Job First)</h3>
+<ul>
+<li>The shortest job is processed first, then the next shortest and so on.</li>
+</ul>
+<p><img alt="Untitled" src="../img/Untitled%208.png" /></p>
+<ul>
+<li>Performs poorly when jobs arrive at different times, and the first and only arrived job happens to be the longs in the whole set of jobs.</li>
+</ul>
+<p><img alt="Untitled" src="../img/Untitled%209.png" /></p>
+<p><img alt="Untitled" src="../img/Untitled%2010.png" /></p>
+<h3 id="stfc-shortest-time-to-completion-first">STFC (Shortest Time-to-Completion First)</h3>
+<ul>
+<li>When a new job enters the system:<ul>
+<li>Determine remaining time of each job</li>
+<li>Schedule the job which has the least time left</li>
+</ul>
+</li>
+</ul>
+<p><img alt="Untitled" src="../img/Untitled%2011.png" /></p>
+<p><img alt="Untitled" src="../img/Untitled%2012.png" /></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Techniques like STFC and SJF optimizes for turnaround time but perform poorly for response time.</p>
+</div>
+<hr />
+<h2 id="scheduling-based-on-response-time">Scheduling (based on Response Time)</h2>
+<h3 id="response-time">Response Time</h3>
+<ul>
+<li>The time from when the job arrives to the first time it is scheduled</li>
+</ul>
+<div class="arithmatex">\[
+T_{response} = T_{firstrun} - T_{arrival}
+\]</div>
+<h3 id="rr-round-robin-scheduling">RR (Round Robin) scheduling</h3>
+<ul>
+<li>Run a job for a time slice and then switch to the next job in the run queue until the jobs are finished.</li>
+<li>Time slice is sometimes called a scheduling quantum.</li>
+<li>The length of a time slice must be a multiple of the timer-interrupt period.<ul>
+<li>E.g. if the timer interrupt runs every 10 ms, the time slice could be 10, 20 or any multiple of 10.</li>
+</ul>
+</li>
+</ul>
+<p><img alt="Untitled" src="../img/Untitled%2013.png" /></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>RR is great for response time but performs poorly on metrics like turn around time.</p>
+</div>
+<ul>
+<li>waiting time =Completion time - (Arrival time + execution time)</li>
+</ul>
+<h3 id="context-switch-cost">Context Switch Cost</h3>
+<ul>
+<li>The time it took to save and load registers</li>
+<li>Cold cache resulting from a new context.</li>
+</ul>
+<h3 id="time-slice-length">Time Slice Length</h3>
+<table>
+<thead>
+<tr>
+<th>Shorter Time Slice</th>
+<th>Longer Time Slice</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Better response time</td>
+<td>Worse response time</td>
+</tr>
+<tr>
+<td>The cost of context switching will dominate overall performance</td>
+<td>Amortize the cost of switching</td>
+</tr>
+</tbody>
+</table>
+<h3 id="managing-io-with-stfc">Managing I/O (with STFC)</h3>
+<ul>
+<li>Assume that there a process that takes 50ms to run, but makes an I/O request that takes 10ms to run after every 10ms, i.e. a I/O operation after every 10ms <strong>sub-job</strong>.</li>
+<li>STFC will treat the 10ms <strong>sub-jobs</strong> of the process as independent processes and schedule accordingly.</li>
+<li>(Check book)</li>
+</ul>
+<p><img alt="Untitled" src="../img/Untitled%2014.png" /></p>
+<h2 id="multilevel-feedback-queue-mlfq">Multilevel Feedback Queue (MLFQ)</h2>
+<ul>
+<li>A Scheduler that learns from the past to predict the future</li>
+<li>Without any knowledge of the process, MLFQ:<ol>
+<li>Optimizes turnaround time → Run shorter jobs first</li>
+<li>Minimizes Response Time</li>
+</ol>
+</li>
+</ul>
+<h3 id="queues">Queues</h3>
+<ul>
+<li>The MLFQ has a number of distinct <strong>queues</strong>, each assigned a different <strong>priority level</strong>.</li>
+<li>At any given time, a job that is ready to run is on a single queue.</li>
+<li>MLFQ uses priorities to decide which job should run at a given time - a job with higher priority (i.e., a job on a higher queue) is chosen to run.</li>
+<li>Of course, more than one job may be on a given queue, and thus have the same priority. In this case, we will just use <strong>round-robin scheduling</strong> among those jobs.</li>
+<li>Thus, we arrive at the first two basic rules for MLFQ:<ul>
+<li>Rule 1: If Priority(A) &gt; Priority(B), A runs (B doesn’t).</li>
+<li>Rule 2: If Priority(A) = Priority(B), A &amp; B run in RR.</li>
+</ul>
+</li>
+<li>The high-priority queues → Short time slices<ul>
+<li>E.g., 10 or fewer milliseconds</li>
+</ul>
+</li>
+<li>The Low-priority queue → Longer time slices<ul>
+<li>E.g., 100 milliseconds</li>
+</ul>
+</li>
+</ul>
+<p><img alt="Untitled" src="../img/Untitled%2015.png" /></p>
+<h3 id="priority">Priority</h3>
+<ul>
+<li>Rather than giving a fixed priority to each job, MLFQ varies the priority of a job based on its observed behavior.</li>
+<li>If, for example, a job repeatedly relinquishes the CPU while waiting for input from the keyboard, MLFQ will keep its priority high, as this is how an interactive process might behave.</li>
+<li>If, instead, a job uses the CPU intensively for long periods of time, MLFQ will reduce its priority.</li>
+<li>In this way, MLFQ will try to learn about processes as they run, and thus use the history of the job to predict its future behavior.</li>
+</ul>
+<h3 id="changing-priorities">Changing Priorities</h3>
+<ul>
+<li>Rules related to changing priorities:<ul>
+<li>Rule 3: When a job enters the system, it is placed at the highest priority (the topmost queue).</li>
+<li>Rule 4a: If a job uses up an entire time slice while running, its priority is reduced (i.e., it moves down one queue).</li>
+<li>Rule 4b: If a job gives up the CPU before the time slice is up, it stays at the same priority level.</li>
+</ul>
+</li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Check Example 1 &amp; 2 from book</p>
+</div>
+<ul>
+<li>MLFQ first assumes it might be a short job, thus giving the job high priority. If it actually is a short job, it will run quickly and complete; if it is not a short job, it will slowly move down the queues, and thus soon prove itself to be a long-running more batch-like process.</li>
+</ul>
+<h3 id="priority-and-io">Priority and I/O</h3>
+<ul>
+<li>As Rule 4b states above, if a process gives up the processor before using up its time slice, we keep it at the same priority level.</li>
+<li>If an interactive job, for example, is doing a lot of I/O (say by waiting for user input from the keyboard or mouse), it will relinquish the CPU before its time slice is complete; in such case, we don’t wish to penalize the job and thus simply keep it at the same level.</li>
+</ul>
+<h3 id="problems_1">Problems</h3>
+<ol>
+<li><strong>Starvation</strong> - if there are “too many” interactive jobs in the system, they will combine to consume all CPU time, and thus long-running jobs will never receive any CPU time.</li>
+<li><strong>Gaming</strong> - A normal program can issue an I/O operation before the time slice is over thus relinquishing the CPU; doing so allows you to remain in the same queue, and thus gain a higher percentage of CPU time.</li>
+<li>A program may change its behavior over time; what was CPU bound may transition to a phase of interactivity.  With our current approach, such a job would be out of luck and not be treated like the other interactive jobs in the system.</li>
+</ol>
+<h3 id="priority-boost-fixing-problem-1-3">Priority Boost (Fixing Problem 1 &amp; 3)</h3>
+<ul>
+<li>Periodically boost the priority of all the jobs in system.<ul>
+<li>Rule 5: After some time period S, move all the jobs in the system to the topmost queue.</li>
+</ul>
+</li>
+<li>How often to boost the priority of jobs?</li>
+</ul>
+<p><img alt="Untitled" src="../img/Untitled%2016.png" /></p>
+<h3 id="better-accounting-fix-problem-2">Better Accounting (Fix Problem 2)</h3>
+<ul>
+<li>Instead of forgetting how much of a time slice a process used at a given level, the scheduler should keep track.</li>
+<li>Once a process has used its allotment, it is demoted to the next priority queue. (Whether it uses the time slice in one long burst or many small ones does not matter.)</li>
+<li>We thus rewrite Rules 4a and 4b to the following single rule:<ul>
+<li>Rule 4: Once a job uses up its time allotment at a given level (regardless of how many times it has given up the CPU), its priority is reduced (i.e., it moves down one queue).</li>
+</ul>
+</li>
+<li>Allotment Size?</li>
+</ul>
+<p><img alt="Untitled" src="../img/Untitled%2017.png" /></p>
+<h3 id="mlfq-summary">MLFQ Summary</h3>
+<p><img alt="Untitled" src="../img/Untitled%2018.png" /></p>
+<h2 id="proportional-share-lottery-scheduling">Proportional-Share - Lottery Scheduling</h2>
+<ul>
+<li>Guarantee that each job obtain a certain percentage of CPU time</li>
+<li>Not optimized for turnaround or response time.</li>
+</ul>
+<h3 id="tickets">Tickets</h3>
+<ul>
+<li>Represent the share of a resource that a process should receive</li>
+<li>The percent of tickets represents its share of the system resource in question</li>
+<li>Example: There are two processes, A and B<ul>
+<li>Process A has 75 tickets → receive 75% of the CPU</li>
+<li>Process B has 25 tickets → receive 25% of the CPU</li>
+</ul>
+</li>
+<li>Winning Ticket: One of the total distributed tickets is the winning ticker</li>
+<li>The scheduler holds a lottery (<strong>every so often</strong>), picks the process with the winning ticket. Then loads the state of the winning process and runs it.</li>
+<li>In the example below A holds ticket 0-75 and B holds 76-100.</li>
+</ul>
+<p><img alt="Untitled" src="../img/Untitled%2019.png" /></p>
+<ul>
+<li>The longer these two jobs compete, the more likely they are to achieve the desired percentages.</li>
+</ul>
+<h3 id="implementation">Implementation</h3>
+<ul>
+<li>We need<ol>
+<li>Number of tickets</li>
+<li>Random number generator</li>
+<li>Linked list to track process and tickets</li>
+</ol>
+</li>
+</ul>
+<p><img alt="Untitled" src="../img/Untitled%2020.png" /></p>
+<h3 id="fairness">Fairness</h3>
+<ul>
+<li>F: fairness metric - The time the first <strong>job completes</strong> divided by the time that the second <strong>job completes</strong>.</li>
+</ul>
+<p><img alt="Untitled" src="../img/Untitled%2021.png" /></p>
+<p><img alt="Untitled" src="../img/Untitled%2022.png" /></p>
+<h3 id="problem">Problem</h3>
+<ul>
+<li>Assigning tickets is not trivial.</li>
+<li>Lottery Algorithm is not deterministic.</li>
+</ul>
+<h2 id="stride-scheduling">Stride Scheduling</h2>
+<h3 id="stride">Stride</h3>
+<ul>
+<li>A value assigned to each job</li>
+<li>Inversely proportional to the number of tickets</li>
+</ul>
+<h3 id="example">Example</h3>
+<ul>
+<li>Processes A (100 tix), B (50 tix), C (250 tix)</li>
+<li>Use a large number, say 10,000 to calculate stride</li>
+<li>Divide 10,000/ no of tickets, to calculate the stride of each process (A will have 100, B will have 200, C will have 40)</li>
+<li>Every time a process runs, its <em>pass</em> is increment by its stride</li>
+<li>Run the process that has the lowest <em>pass</em> value</li>
+</ul>
+<p><img alt="Untitled" src="../img/Untitled%2023.png" /></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The results of stride scheduling are the same as the results of Lottery Scheduling. The only difference is that stride scheduling is deterministic.</p>
+</div>
+<h3 id="why-lottery-when-stride">Why Lottery when Stride?</h3>
+<ul>
+<li>Lottery Scheduling does not have any global state.</li>
+<li>Imagine a new job enters in the middle of our stride scheduling example above; what should its pass value be? Should it be set to 0? If so, it will monopolize the CPU.</li>
+<li>With lottery scheduling, there is no global state per process; we simply add a new process with whatever tickets it has, update the single global variable to track how many total tickets we have, and go from there.</li>
+<li>In this way, lottery makes it much easier to incorporate new processes in a sensible manner.</li>
+</ul>
+<h2 id="linux-completely-fair-scheduler-cfs">Linux Completely Fair Scheduler (CFS)</h2>
+<ul>
+<li>Spend very little time in making scheduling decisions.</li>
+<li>Non-fixed timeslice.</li>
+<li>Enables control over priority by using nice value</li>
+<li>Employs efficient data structure for efficient search, insertion and deletion of a process.</li>
+</ul>
+<h3 id="virtual-runtime-vruntime">Virtual Runtime (<code>vruntime</code>)</h3>
+<ul>
+<li>Track how long each process has been executing for in a process specific variable</li>
+<li>Increase the variable in proportion with physical (real) time when a process runs</li>
+<li>When a scheduling decision occurs, CFS will pick the process with the lowest <code>vruntime</code> to run next.</li>
+</ul>
+<h3 id="when-to-switch">When to switch?</h3>
+<ul>
+<li>Often switches → More fairness</li>
+<li>Less switches → More performance</li>
+<li><code>sched_latency</code> = 48ms → timeslice = sched_latency/n</li>
+<li><code>min_granularity</code> = 6ms → min timeslice (for when there are too many processes)</li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Check Book <a href="https://pages.cs.wisc.edu/~remzi/OSTEP/cpu-sched-lottery.pdf">Page 8</a></p>
+</div>
+<h3 id="weighting-niceness">Weighting (Niceness)</h3>
+<ul>
+<li>The nice parameter defines priority.</li>
+<li>IT can be set anywhere from -20 to +19 for a process, with a default of 0</li>
+<li>
+<ul>
+<li>: lower priority</li>
+</ul>
+</li>
+<li>
+<ul>
+<li>: higher priority</li>
+</ul>
+</li>
+<li>CFS maps nice values to weights, which are used to calculate time slice.</li>
+</ul>
+<p><img alt="Untitled" src="../img/Untitled%2024.png" /></p>
+<p><img alt="Untitled" src="../img/Untitled%2025.png" /></p>
+<p><img alt="Untitled" src="../img/Untitled%2026.png" /></p>
+<ul>
+<li>weight0 is the weight of the default priority (0).</li>
+<li>
+<p>here runtime is the actual time that the job ran; vruntime is the scaled amount.</p>
+<p><img alt="Untitled" src="../img/Untitled%2027.png" /></p>
+<p><img alt="Untitled" src="../img/Untitled%2028.png" /></p>
+</li>
+</ul>
+<h3 id="data-structures-efficiency">Data Structures - Efficiency</h3>
+<ul>
+<li>Point: When the scheduler has to find the next job to run, it should do so as quickly as possible.</li>
+<li>For this the OS uses <strong>Red-Black Trees</strong> which are:<ul>
+<li>Balanced binary tree (keep depth low)</li>
+<li>Operations take O(log n) (efficient)</li>
+</ul>
+</li>
+<li>Sleep and I/O bound resources are handled differently to avoid monopolization.</li>
+</ul>
+<p><img alt="Untitled" src="../img/Untitled%2029.png" /></p>
+<h2 id="multiprogramming-and-time-sharing">Multiprogramming and Time Sharing</h2>
+<ul>
+<li>Load multiple processes in memory</li>
+<li>Execute each of them for a short while</li>
+<li>Switch between them to increase utilization and efficiency</li>
+</ul>
+<h3 id="problem_1">Problem</h3>
+<ul>
+<li>Memory Protection: Errant memory access from other processes.</li>
+</ul>
+<p><img alt="Untitled" src="../img/Untitled%2030.png" /></p>
+<h2 id="address-spaces">Address Spaces</h2>
+<ul>
+<li>An abstraction of physical memory</li>
+<li>A program’s view of memory in the system</li>
+<li>Code<ul>
+<li>Where instructions live</li>
+</ul>
+</li>
+<li>Heap<ul>
+<li>Dynamically allocate memory</li>
+</ul>
+</li>
+<li>
+<p>Stack</p>
+<ul>
+<li>Store return addresses and values</li>
+<li>local variables and arguments to routines</li>
+</ul>
+<p><img alt="Untitled" src="../img/Untitled%2031.png" /></p>
+</li>
+</ul>
+<h2 id="virtual-address-space">Virtual Address Space</h2>
+<ul>
+<li>Every program is given a virtual address space which it thinks of as the actual memory but in reality OS is just mapping the virtual address of a program to a physical space in memory.</li>
+<li>A program is not aware of the fact that its memory is being virtualized</li>
+<li>Some goals of Virtual Address Space are:<ol>
+<li>Transparency</li>
+<li>Efficiency</li>
+<li>Protection</li>
+</ol>
+</li>
+</ul>
+<h3 id="components-of-virtual-address-space">Components of Virtual Address Space</h3>
+<p><img alt="Untitled" src="../img/Untitled%2032.png" /></p>
+<ul>
+<li>Data: For defined global variables</li>
+<li>BSS: For undefined global variables</li>
+</ul>
+<h2 id="address-translation">Address Translation</h2>
+<ul>
+<li>Hardware transforms a virtual address to a physical address.</li>
+<li>Memory virtualizing takes a similar strategy known as limited direct execution (LDE) for efficiency and control.</li>
+</ul>
+<h2 id="dynamic-reallocation-base-bound">Dynamic Reallocation - (Base &amp; Bound)</h2>
+<p><img alt="Untitled" src="../img/Untitled%2033.png" /></p>
+<p><img alt="Untitled" src="../img/Untitled%2034.png" /></p>
+<div class="arithmatex">\[
+physical \ address = virtual \ address + base
+\]</div>
+<div class="arithmatex">\[
+0 \leq virtual \ address &lt; bound
+\]</div>
+<h3 id="storing-bound-register-2-ways">Storing Bound Register (2 ways)</h3>
+<p><img alt="Untitled" src="../img/Untitled%2035.png" /></p>
+<h3 id="context-switching">Context Switching</h3>
+<p><img alt="Untitled" src="../img/Untitled%2036.png" /></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>See summary of chapter from <a href="https://pages.cs.wisc.edu/~remzi/OSTEP/vm-mechanism.pdf">book</a></p>
+</div>
+<h3 id="problems_2">Problems</h3>
+<ul>
+<li>Internal Fragmentation<ul>
+<li>Big chunk of free space between heap and stack</li>
+<li>Wastage of memory</li>
+</ul>
+</li>
+<li>Can not run a program when address space does not fit into physical memory</li>
+</ul>
+<h2 id="segmentation">Segmentation</h2>
+<ul>
+<li>A segment is a contiguous portion of the address space of a particular length.</li>
+<li>Segmentation allows the OS to do is to place each one of those segments in different parts of physical memory, and thus avoid filling physical memory with unused virtual address space.</li>
+<li>Now the instead of storing 1 base bound pair, OS stores 3 for:<ul>
+<li>Code</li>
+<li>Stack</li>
+<li>Heap</li>
+</ul>
+</li>
+</ul>
+<p><img alt="Untitled" src="../img/Untitled%2037.png" /></p>
+<h3 id="translation-code">Translation (code)</h3>
+<div class="arithmatex">\[
+physical \ address = offset + base
+\]</div>
+<ul>
+<li>Example:</li>
+</ul>
+<p><img alt="Untitled" src="../img/Untitled%2038.png" /></p>
+<h3 id="translation-heap">Translation (heap)</h3>
+<p><img alt="Untitled" src="../img/Untitled%2039.png" /></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>In context of memory K = 1024</p>
+</div>
+<h3 id="which-segment-are-we-referring-to">Which Segment Are We Referring To?</h3>
+<p><img alt="Untitled" src="../img/Untitled%2040.png" /></p>
+<p><img alt="Untitled" src="../img/Untitled%2041.png" /></p>
+<h3 id="stack-and-segments">Stack and Segments</h3>
+<ul>
+<li>Stack grows backwards (towards smaller addresses)</li>
+<li>Extra hardware support is needed to store that information</li>
+</ul>
+<p><img alt="Untitled" src="../img/Untitled%2042.png" /></p>
+<p><img alt="Untitled" src="../img/Untitled%2043.png" /></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The Max Seg Size - Offset is Ratta</p>
+</div>
+<h3 id="support-for-sharing">Support for Sharing</h3>
+<ul>
+<li>Sometimes it is useful to share certain memory segments between address spaces.</li>
+<li>Hardware support is needed in the form of protection bits to indicate permissions of read, write and execute.</li>
+<li>In addition to checking whether a virtual address is within bounds, the hardware also has to check whether a particular access is permissible</li>
+</ul>
+<p><img alt="Untitled" src="../img/Untitled%2044.png" /></p>
+<h3 id="fine-grained-vs-coarse-grained">Fine-grained vs Coarse-grained</h3>
+<table>
+<thead>
+<tr>
+<th>Coarse</th>
+<th>Fine</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>small number of segments</td>
+<td>allows more flexibility for address space</td>
+</tr>
+<tr>
+<td>code, heap, stack</td>
+<td>hardware support with a segment table is required</td>
+</tr>
+</tbody>
+</table>
+<h3 id="fragmentation">Fragmentation</h3>
+<ul>
+<li>With variable segment size, physical memory quickly becomes full of little holes of free space</li>
+<li>External Fragmentation: little holes of free space in physical memory that is too small for allocating segment<ul>
+<li>There is 24KB free, but not in one contiguous segment</li>
+<li>The OS cannot satisfy the 20KB request</li>
+</ul>
+</li>
+</ul>
+<h2 id="free-space-in-context-of-user-managed-memory">Free Space (in context of user-managed memory)</h2>
+<ul>
+<li>Chunks of unallocated <em>heap</em> memory.</li>
+<li><strong>OS</strong> manages memory using <strong>segmentation</strong> while user’s heap is managed by a <strong>user-level memory allocation libraries</strong> (<code>malloc()</code> and <code>free()</code> in <code>libc</code>).</li>
+<li>If the free space gets chopped into many little variable sized pieces (after multiple <code>malloc()</code> calls), subsequent requests might fail because there is no single contiguous space that can satisfy the request.</li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Internal fragmentation can also occur if the allocator hands out a larger size of memory than the requested size.</p>
+</div>
+<h2 id="splitting-and-coalescing">Splitting and Coalescing</h2>
+<p><img alt="Untitled" src="../img/Untitled%2045.png" /></p>
+<h3 id="splitting">Splitting</h3>
+<ul>
+<li>Assume we have a request for just a single byte of memory. In this case, the allocator will perform an action known as splitting:<ul>
+<li>it will find a free chunk of memory that can satisfy the request and split it into two.</li>
+<li>the first chunk it will return to the caller; the second chunk will remain on the list.</li>
+</ul>
+</li>
+</ul>
+<h3 id="coalescing">Coalescing</h3>
+<ul>
+<li>
+<p>Given this (tiny) heap, what happens when an application calls free(10), thus returning the space in the middle of the heap?</p>
+<ul>
+<li>If we simply add this free space back into our list without too much thinking, we might end up with a list that looks like this:</li>
+</ul>
+<p><img alt="Untitled" src="../img/Untitled%2046.png" /></p>
+</li>
+<li>
+<p>While the entire heap is now free, it is seemingly divided into three chunks of 10 bytes each. Thus, if a user requests 20 bytes, a simple list traversal will not find such a free chunk, and return failure.</p>
+</li>
+<li>To solve the issue we can coalesce by following these steps:<ul>
+<li>look carefully at the addresses of the chunk you are returning as well as the nearby chunks of free space</li>
+<li>if the newly freed space sits right next to one (or two, as in this example) existing free chunks, merge them into a single larger free chunk</li>
+</ul>
+</li>
+</ul>
+<p><img alt="Untitled" src="../img/Untitled%2047.png" /></p>
+<h2 id="how-does-free-know-how-much-to-free">How does <code>free()</code> know how much to free?</h2>
+<ul>
+<li>The information about the allocation size is kept in a <strong>header block</strong>, which is kept just before the handed-out chunk of memory.</li>
+</ul>
+<p><img alt="Untitled" src="../img/Untitled%2048.png" /></p>
+<p><img alt="Untitled" src="../img/Untitled%2049.png" /></p>
+<ul>
+<li>the <code>magic</code> number is for integrity checks.</li>
+<li>on a call to <code>free()</code> we can check the header and figure out the size:</li>
+</ul>
+<pre><code class="language-c">void free(void *ptr) {
+ header_t *hptr = (header_t *) ptr - 1;
+ ...
+ assert(hptr-&gt;magic==1234567);
+ ...
+}
+</code></pre>
+<ul>
+<li>Because we are storing the header in the handed-out chunk, we have to keep the size of the header in account:</li>
+</ul>
+<div class="arithmatex">\[
+malloc(N) = N + \text{size of header}
+\]</div>
+<h2 id="embedding-free-list">Embedding free list</h2>
+<ul>
+<li>In the library you can’t call malloc to get more space.</li>
+<li>You have to embed the “free list” within the available space.</li>
+<li><em>(See Slides and Book)</em></li>
+</ul>
+<h2 id="ran-out-of-heap">Ran out of heap</h2>
+<ul>
+<li>Return <code>NULL</code>.</li>
+<li>Call <code>sbrk()</code> to grow heap.</li>
+</ul>
+<h2 id="basic-strategies">Basic Strategies</h2>
+<ul>
+<li>Finding the most optimal free chunk.</li>
+</ul>
+<h3 id="best-fit">Best fit</h3>
+<ul>
+<li>Search through the free list and find chunks of free memory that are as <strong>big or bigger</strong> than the requested size.</li>
+<li>Return the one that is the smallest in that group of candidates.</li>
+<li>Advantage: Returns the most optimal chunk</li>
+<li>Drawback: Searching through the list is slow.</li>
+</ul>
+<h3 id="worst-fit">Worst fit</h3>
+<ul>
+<li>Find the <strong>largest</strong> chunk and return the requested amount.</li>
+<li>Keep the remaining (large) chunk on the free list.</li>
+<li>Advantage: Freeling space will create larger chunks through coalescing.</li>
+<li>Drawback: A complete search of the list is still required and thus its slow</li>
+</ul>
+<h3 id="first-fit">First Fit</h3>
+<ul>
+<li>Finds the first block that is big enough and returns the requested amount to the user.</li>
+<li>Advantage: Search on average is fast.</li>
+<li>Drawback: Pollutes the beginning of the free list with small objects.</li>
+</ul>
+<h2 id="advanced-strategies">Advanced Strategies</h2>
+<h3 id="segregates-lists">Segregates Lists</h3>
+<ul>
+<li>Maintain multiple free lists for tracking free spaces.</li>
+<li>One for popular-size requests:<ul>
+<li>Advantages:</li>
+<li>No exhaustive search needed for popular-size requests</li>
+<li>No fragmentation for</li>
+</ul>
+</li>
+<li>One for general allocation</li>
+</ul>
+<h3 id="buddy-allocation">Buddy Allocation</h3>
+<ul>
+<li><em>Designed to simplify coalescing</em></li>
+</ul>
+<h4 id="slicing">Slicing</h4>
+<ul>
+<li>Free memory is first conceptually thought of as one big space of size <span class="arithmatex">\(2^N\)</span>.</li>
+<li>When a request for memory is made, the search for free space recursively divides free space by two until a block that is big enough to accommodate the request is found.</li>
+<li>The found chunk of memory is returned to the user.</li>
+</ul>
+<p><img alt="Untitled" src="../img/Untitled%2050.png" /></p>
+<h4 id="coalescing_1">Coalescing</h4>
+<ul>
+<li>When returning the 8KB block to the free list, the allocator checks whether the “buddy” 8KB is free. If so, it coalesces the two blocks into a 16KB block.</li>
+<li>The allocator then checks if the buddy of the 16KB block is still free; if so, it coalesces those two blocks.</li>
+</ul>
+<h4 id="problems_3">Problems</h4>
+<ul>
+<li>Internal Fragmentation because we can only divide memory into chucks of <span class="arithmatex">\(2^x\)</span>.</li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>It is very simple to determine the buddy of a particular block. The buddies only differ by a single bit.</p>
+</div>
+<h2 id="paging">Paging</h2>
+<h3 id="review-base-bound">Review: Base Bound</h3>
+<ul>
+<li>Give each program a <strong>fixed sized memory block</strong>.</li>
+<li>Big chunk of free space in the middle → needlessly consume memory</li>
+<li>Internal Fragmentation</li>
+<li><strong>FIXED SIZE SOLUTION</strong></li>
+</ul>
+<p><img alt="Untitled" src="../img/Untitled%2051.png" /></p>
+<h3 id="review-segmentation">Review: Segmentation</h3>
+<ul>
+<li>Divide the address space in logical segments (code, stack, heap) of the memory and separately allocate memory to each segment.</li>
+<li>We will need three sets of base-bound registers.</li>
+<li>Allows more fine grained control over allocation.</li>
+<li>External Fragmentation</li>
+<li><strong>VARIABLE SIZE SOLUTION</strong></li>
+</ul>
+<h3 id="paging-intro">Paging - INTRO</h3>
+<ul>
+<li>Page → a fixed-sized memory unit in <strong>virtual</strong> memory</li>
+<li>Page Frame → a fixed-sized memory unit in physical memory</li>
+<li>We view physical memory as an array of fixed-sized slots called page frames; each of these frames can contain a single virtual-memory page.</li>
+</ul>
+<p><img alt="Untitled" src="../img/Untitled%2052.png" /></p>
+<h3 id="problem-paging-will-solve">Problem Paging will solve</h3>
+<ul>
+<li><em>Flexibility:</em> the system will be able to support the abstraction of an address space effectively, regardless of how a process uses the address space; we won’t, for example, make assumptions about the direction the heap and stack grow and how they are used.</li>
+<li><em>Simplicity:</em> It becomes very easy to manage free space (using a freelist of free pages perhaps)</li>
+<li>The virtual address space will stay contiguous but its mapping can be scattered in the physical memory. Assigning pages is easier as pages are fixed size and its easy to find free pages.</li>
+</ul>
+<h2 id="page-table">Page Table</h2>
+<ul>
+<li>Address Translation is performed using <em>per-process</em> <strong>page table</strong>.</li>
+</ul>
+<p><img alt="Untitled" src="../img/Untitled%2053.png" /></p>
+<ul>
+<li>Virtual Address Space → the virtual memory for our program will also be divided into (contiguous) <strong>Pages</strong>. These pages will exist in the physical memory as <strong>Page Frames.</strong></li>
+</ul>
+<p><img alt="Untitled" src="../img/Untitled%2054.png" /></p>
+<ul>
+<li>We can go from Pages to Page frames using the Address table above:</li>
+</ul>
+<p><img alt="Untitled" src="../img/Untitled%2055.png" /></p>
+<ul>
+<li><em>Page 0 is in Page Frame 3; Page 1 is in Page Frame 7;</em></li>
+</ul>
+<h3 id="address-translation_1">Address Translation</h3>
+<ul>
+<li>PDF: Page 3</li>
+</ul>
+<p><a href="https://pages.cs.wisc.edu/~remzi/OSTEP/vm-paging.pdf"></a></p>
+<h3 id="vpn-and-offset">VPN and Offset</h3>
+<ul>
+<li>VPN = Virtual Page Number; PFN = Physical Frame Number</li>
+<li>We need to know:<ul>
+<li>Size of total <strong>VIRTUAL</strong> address space → Size of address</li>
+<li>address space 64 bytes, 6 bites ( 2^6 = 64)</li>
+<li>Size of Page → Size of offset</li>
+<li>if page is 16 bytes, offset will be 4 bit</li>
+<li>Number of Pages in <strong>VIRTUAL</strong> address space → Size of VPN</li>
+<li>if 4 pages, VPN is 2 bit</li>
+</ul>
+</li>
+</ul>
+<p><img alt="Untitled" src="../img/Untitled%2056.png" /></p>
+<ul>
+<li>The MSB bits becomes the VPN.</li>
+<li>VPN tells us which page to address and offset tells us which specific byte in the page we want to address.</li>
+<li>We can use the Page table to convert VPN to PFN and thus address the physical memory.</li>
+</ul>
+<p><img alt="Untitled" src="../img/Untitled%2057.png" /></p>
+<h3 id="page-tables-are-large">Page Tables are large</h3>
+<ul>
+<li>Page Tables can become larger than Segment Tables (Segmentation) &amp; Base/Bound Pairs so they need to be stored in the memory themselves.</li>
+<li>Page tables have to store every one to one mapping for all pages of a process.</li>
+</ul>
+<h3 id="contents-of-page-tables-pte">Contents of Page Tables &amp; PTE</h3>
+<ul>
+<li>Linear Page Table<ul>
+<li>Data Structure: Array</li>
+<li>Indexed via VPN</li>
+<li>Each index stores page-table entry (PTE)</li>
+</ul>
+</li>
+<li>PTE:<ul>
+<li>Valid Bit: Indicating whether the translation is valid</li>
+<li>Protection Bit: Indicating whether the page could be read from, written to, or executed from</li>
+<li>Present Bit: Indicating whether this page is in physical memory or on disk (swapped out)</li>
+<li>Dirty Bit: Indicating whether the page has been modified since it was brought into memory</li>
+<li>Accessed/Reference Bit: Indicating that a page has been accessed (useful in determining which pages are popular and thus should be kept in memory)</li>
+</ul>
+</li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Valid Bit is sometimes not used. Present Bit tells the OS if a page is present or not. If a page is present than its also valid. If a page is not present of the OS needs to then validate the Page using extra Data Structures and then load if valid.</p>
+</div>
+<p><img alt="Untitled" src="../img/Untitled%2058.png" /></p>
+<h3 id="page-tables-are-slow">Page Tables are Slow</h3>
+<ul>
+<li>For every memory reference, paging requires the hardware to perform <strong>one extra memory reference.</strong><ul>
+<li>One memory reference to get the Page Frame Number</li>
+<li>One memory reference to access the physical memory to get the data</li>
+</ul>
+</li>
+<li>Memory access operations are costly.</li>
+<li>(Check Memory Trace from Book)</li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Allocation on First Touch: Physical memory is only allocated once a process access the corresponding virtual memory for the first time </br>
+Unused pages Reclaimed: The pages may me swapped into disc if not used for long time and then must be reclaimed</p>
+</div>
+<h2 id="tlbtranslation-lookaside-buffer-faster-translations">TLB(translation-lookaside buffer) - Faster Translations</h2>
+<ul>
+<li>Part of the systems memory-management unit (MMU)</li>
+<li>It is simply a hardware cache.</li>
+<li>Upon each virtual memory reference, the hardware first checks the TLB to see if the desired  translation is held therein ; if so, the translation is performed (quickly) without having to consult the page table (which has all translations)</li>
+</ul>
+<p><em>The algorithm the hardware follows works like this: first, extract the virtual page number (VPN) from the virtual address (Line 1 in Figure 19.1), and check if the TLB holds the translation for this VPN (Line 2). If it does, we have a </em><em>TLB hit</em><em>, which means the TLB holds the translation. Success! We can now extract the page frame number (PFN) from the relevant TLB entry, concatenate that onto the offset from the original virtual address, and form the desired physical address (PA), and access memory (Lines 5–7), assuming protection checks do not fail (Line 4).</em></p>
+<p><em>If the CPU does not find the translation in the TLB (a </em><em>TLB miss</em><em>), we have some more work to do. In this example, the hardware accesses the page table to find the translation (Lines 11–12), and, assuming that the virtual memory reference generated by the process is valid and accessible (Lines 13, 15), updates the TLB with the translation (Line 18). These set of actions are costly, primarily because of the extra memory reference needed to access the page table (Line 12). Finally, once the TLB is updated, the hardware retries the instruction; this time, the translation is found in the TLB, and the memory reference is processed quickly.</em></p>
+<ul>
+<li>TLB improves translation times by:<ul>
+<li>Spatial Locality (accessing elements of an array)</li>
+<li>Temporal Locality (accessing variable which was recently accessed</li>
+</ul>
+</li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Larger Page Size, less number of misses.</p>
+</div>
+<h3 id="who-handles-the-tlb-miss">Who Handles The TLB Miss?</h3>
+<h4 id="cisc-hardware-managed-tlb-tables">CISC &amp; Hardware Managed TLB Tables</h4>
+<ul>
+<li>Hardware handles the TLB misses.</li>
+<li>Hardware needs to know:<ul>
+<li>Where the page table is (page table base register)</li>
+<li>Exact format of the page table</li>
+</ul>
+</li>
+<li>On a miss, the hardware would “walk” the page table, find the correct page table entry, extract the information, update the TLB and retry the instruction.</li>
+</ul>
+<h4 id="risc-software-managed-tlb-tables">RISC &amp; Software Managed TLB Tables</h4>
+<ul>
+<li>Software (OS code in kernal mode) handles the TLB misses.</li>
+<li>On a TLB miss, hardware only raises an exception.</li>
+<li>The exception triggers the trap handler, which then executes the code to manage the TLB miss by accessing the page table, extracting the correct page table entry and using “privileged” instructions to update TLB.</li>
+<li>After the trap completes, the hardware <strong>retries</strong> the TLB access.</li>
+<li>Important Points:<ul>
+<li>The <code>return-from-trap</code> instruction, in this case, will not resume after the instruction which caused the trap to trigger but will resume from the instruction that originally triggered the trap. (this special behavior is done by changing the PC (Program Counter) to the appropriate value)</li>
+<li>The TLB miss-handling code itself must not cause more TLB misses, i.e. the code must not access a page whose translation is not already present in the TLB.</li>
+</ul>
+</li>
+<li>Pros of Software Managed TLB:<ul>
+<li>Flexibility: OS can use any data structure</li>
+<li>Simplicity</li>
+</ul>
+</li>
+</ul>
+<h3 id="tlb-contents">TLB Contents</h3>
+<ul>
+<li>A typical TLB might have 32, 64, or 128 entries.</li>
+<li>Fully-Associative → any given translation can be anywhere on the TLB and hardware will search the entire TLB in parallel to find the desired translation.</li>
+<li>A TLB entry might look like this:</li>
+</ul>
+<p><img alt="Untitled" src="../img/Untitled%2059.png" /></p>
+<h3 id="tlb-context-switching">TLB &amp; Context Switching</h3>
+<ul>
+<li>The TLB contains virtual-to-physical translations that are only valid for the currently running process; these translations are not meaningful for other processes.</li>
+<li>When switching from one process to another, the hardware or OS (or both) must be careful to ensure that the about-to-be-run process does not accidentally use translations from some previously run process.</li>
+<li>(See Lecture Slides for Visualization)</li>
+</ul>
+<h4 id="flush-tlb">Flush TLB</h4>
+<ul>
+<li>Flush the TLB on context switches.</li>
+<li>Can be done by switching all Valid bits to 0.</li>
+<li>Flaws:<ul>
+<li>TLB incurs misses on context switch as the whole TLB is flushed clean</li>
+</ul>
+</li>
+</ul>
+<h4 id="asid-address-space-identifier">ASID (address space identifier)</h4>
+<ul>
+<li>You can think of the ASID as a process identifier (PID), but usually it has fewer bits<ul>
+<li>e.g., 8 bits for the ASID versus 32 bits for a PID</li>
+</ul>
+</li>
+</ul>
+<p><img alt="Untitled" src="../img/Untitled%2060.png" /></p>
+<ul>
+<li>With address-space identifiers, the TLB can hold translations from different processes at the same time without any confusion.</li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Pages can be shared! Sharing of code pages (in binaries or shared libraries) is useful as it reduces the number of physical pages in use, thus reducing memory overhead.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Valid bit in Page Table specifies if a certain page is assigned to a process or not. Valid bit in TLB specifies if a certain valid translation exists</p>
+</div>
+<h3 id="tlb-replacement-policy">TLB &amp; Replacement Policy</h3>
+<ul>
+<li>when we are installing a new entry in the TLB, we have to replace an old one.</li>
+</ul>
+<h4 id="lru-least-recently-used">LRU (least recently used)</h4>
+<ul>
+<li>Evict an entry that has not recently been used.</li>
+<li>Take advantage of locality in the memory</li>
+</ul>
+<p><img alt="Untitled" src="../img/Untitled%2061.png" /></p>
+<h4 id="random-policy">Random Policy</h4>
+<ul>
+<li>Evict a random entry to make space for a new</li>
+<li>Performs better in cases where a program access n+1 pages with a TLB size of n pages. In this case LRU will miss upon every access.</li>
+</ul>
+<h3 id="tlb-entry">TLB Entry</h3>
+<ul>
+<li>32-bit address space with 4KB pages:</li>
+</ul>
+<p><img alt="Untitled" src="../img/Untitled%2062.png" /></p>
+<h2 id="smaller-tables">Smaller Tables</h2>
+<ul>
+<li>Linear Page Tables take up too much space.</li>
+<li>Example:<ul>
+<li>32-bit address space → 2^32 addressable bytes</li>
+<li>4KB pages → num pages = 2^32/4*1024 = 2^20 pages</li>
+<li>4 byte per PFN → 2^20 * 4 = 4MB of space needed</li>
+</ul>
+</li>
+</ul>
+<h3 id="strawman-bigger-pages">Strawman: Bigger Pages</h3>
+<ul>
+<li>As size of Page Table is a function of Page Size, we can increase the page size to reduce the size of page tables.</li>
+<li>With larger page sizes → lesser pages will be needed to store all the memory → lesser PTEs will be needed to index those pages → lower memory usage.</li>
+<li>Problem → wastage of memory within each page → Internal Fragmentation</li>
+</ul>
+<h3 id="hybrid-approach-paging-segmentation-intuition">Hybrid Approach: Paging + Segmentation (Intuition)</h3>
+<ul>
+<li>We dont really always use all the virtual memory space (Pages). Thus there are a lot of unused and empty pages.</li>
+</ul>
+<p><img alt="Untitled" src="../img/Untitled%2063.png" /></p>
+<ul>
+<li>With this in mind, we can segment the pages themselves, thus eliminating those unused page entries</li>
+<li>Why not have one page per logical segment per process?</li>
+</ul>
+<h3 id="segmentation-walkthrough">Segmentation Walkthrough</h3>
+<ul>
+<li>Each process has three-page tables, one for each logical segment</li>
+<li><strong>Base register</strong> contains the <em>physical</em> address of a linear page table for that segment</li>
+<li><strong>Bound register</strong> indicates the end of the page table → number of pages</li>
+</ul>
+<p><img alt="Untitled" src="../img/Untitled%2064.png" /></p>
+<p><img alt="Untitled" src="../img/Untitled%2065.png" /></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Base[SN] gives us the starting address of the page table storing the segment SN</p>
+</div>
+<ul>
+<li>Unallocated pages between the stack and the heap no longer take up space in a page table</li>
+<li>Cons:<ul>
+<li>Segmentation is not flexible as it assumes a certain usage pattern of the address space.</li>
+<li>if we have a large but sparsely-used heap, we can still end up with a lot of page table waste</li>
+<li>this hybrid approach causes external fragmentation to arise again; Page tables themselves will be of variable size and thus will complicate things when stored.</li>
+</ul>
+</li>
+</ul>
+<h3 id="multi-level-page-tables">Multi-level Page Tables</h3>
+<p><img alt="Untitled" src="../img/Untitled%2066.png" /></p>
+<ul>
+<li>Removes unused or invalid page entries + does not require segmentation.</li>
+<li>Turns the <strong>Linear Page Table</strong> to a <strong>Tree</strong>.</li>
+<li>Theory:<ul>
+<li>Chop up the page table into page-sized units.</li>
+<li>if an entire page of page-table entries (PTEs) is invalid (not used), don’t allocate that page of the page table at all.</li>
+<li>To track whether a page of the page table is valid (and if valid, where it is in memory), use a new structure, called the <strong>page directory.</strong></li>
+</ul>
+</li>
+</ul>
+<h3 id="page-directory">Page Directory</h3>
+<ul>
+<li>The page directory, in a simple two-level table, contains one entry per page of the page table.</li>
+<li>It consists of a number of page directory entries (PDE). A PDE (minimally) has a valid bit and a page frame number (PFN), similar to a PTE.</li>
+<li>If the PDE is valid, it means that at least one of the pages of the page table that the entry points to (via the PFN) is valid, i.e., in at least one PTE on that page pointed to by this PDE, the
+valid bit in that PTE is set to one. If the PDE is not valid (i.e., equal to zero), the rest of the PDE is not defined.</li>
+<li>Pros:<ul>
+<li>Only allocated pages for the address space we are using.</li>
+<li>Supports sparse address spaces</li>
+<li>If carefully constructed, each portion of the page table fits neatly within a page, making it easier to manage memory</li>
+</ul>
+</li>
+<li>Cons:<ul>
+<li>On TLB miss, two loads from memory are required; one for the PDE and one for the PTE</li>
+<li>Complexity</li>
+</ul>
+</li>
+</ul>
+<h3 id="example_1">Example</h3>
+<ul>
+<li><a href="https://pages.cs.wisc.edu/~remzi/OSTEP/vm-smalltables.pdf">PDF - Page 7</a></li>
+</ul>
+<h3 id="more-than-2-levels">More than 2 levels</h3>
+<ul>
+<li>If the Page Directory Table gets too big, it too can be stored inside another Page Directory Table.</li>
+<li>(Read walkthrough from the Book)</li>
+</ul>
+<h2 id="inverted-page-tables">Inverted Page Tables</h2>
+<ul>
+<li>Instead of having many page tables (one per process of the system), we keep a single page table that has an entry for each physical page of the system.</li>
+<li>The entry tells us which process is using this page, and which virtual page of that process maps to this physical page.</li>
+<li>Finding the correct entry is now a matter of searching through this data structure (which can be sped up using hash tables)</li>
+</ul>
+<h2 id="swapping">Swapping</h2>
+<ul>
+<li>Use part of disk as memory.</li>
+<li>Physical memories are usually much smaller than the virtual address space</li>
+<li>OS need a place to stash away portions of address space that currently aren’t in great demand</li>
+</ul>
+<h2 id="swap-space">Swap Space</h2>
+<ul>
+<li>A reserved space on the hard disk for moving pages back and forth.</li>
+<li>The size of swap space defines the upper limit on the number of pages in the system</li>
+</ul>
+<h3 id="the-present-bit-tlb">The Present Bit - TLB</h3>
+<ul>
+<li>Tells the TLB if the page is present in memory or on disk.</li>
+<li>The act of accessing a page that is not in physical memory is commonly referred to as a <strong>page fault</strong>.</li>
+<li>Upon a page fault, the OS is invoked to service the page fault. A particular piece of code, known as a page-fault handler, runs, and must service the page fault.</li>
+<li><em>Page Faults are handled by OS in both hardware and software TLBs.</em></li>
+</ul>
+<h2 id="page-fault-handler">Page Fault Handler</h2>
+<ul>
+<li>If a page is not present in memory, a page fault handler is executed by the OS.</li>
+<li>The Handler looks at the PFN bits of the page, which in case of swapping, store the disk address.</li>
+<li>When the disk I/O complete, the OS will update the page table to mark the page as present. It will also update the PFN field to record the in-memory location of the newly-fetched page, and retry the instruction.</li>
+<li>(The OS can also update the TLB along with the swap of the page)</li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>While the I/O is in flight, the process will be in the blocked state. Thus, the OS will be free to run other ready processes.</p>
+</div>
+<h3 id="when-to-preform-replacement">When to preform replacement?</h3>
+<h4 id="lazy-approach">Lazy Approach</h4>
+<ul>
+<li>OS waits until memory is entirely full, and only then replaces a page to make room for some other page</li>
+</ul>
+<h4 id="proactive-approach">Proactive Approach</h4>
+<ul>
+<li>Activate Page Daemon when there are fewer than LW (low watermark) free pages.</li>
+<li>Evicts pages until there are HW (high watermark) pages available.</li>
+<li>Clustering can improve performance: cluster a number of pages and write them out at once to the swap partition.</li>
+</ul>
+<h2 id="page-replacement-policy">Page Replacement Policy</h2>
+<ul>
+<li>Our goal in picking a replacement policy for this cache is to minimize the number of cache misses (to minimize the number of times that we have to fetch a page from disk).</li>
+<li>Average Memory Access Time (AMAT)</li>
+</ul>
+<div class="arithmatex">\[
+AMAT = (T_M) + (P_{Miss} * T_D)
+\]</div>
+<p><img alt="Untitled" src="../img/Untitled%2067.png" /></p>
+<h3 id="optimal-swapping-policy">Optimal Swapping Policy</h3>
+<ul>
+<li>Lead to the fewest number of misses overall.</li>
+<li>Replaces the page that will be accessed furthest in the future.</li>
+</ul>
+<p><img alt="Untitled" src="../img/Untitled%2068.png" /></p>
+<h3 id="fifo">FIFO</h3>
+<ul>
+<li>Pages placed in a queue when they enter the system.</li>
+<li>When a replacement occurs, the page on the tail of the queue is evicted.</li>
+<li>Cons: Has no notion of importance of a page.</li>
+</ul>
+<p><img alt="Untitled" src="../img/Untitled%2069.png" /></p>
+<h3 id="random">Random</h3>
+<ul>
+<li>Picks a random page to replace under memory pressure.</li>
+</ul>
+<h3 id="lru-least-recently-used_1">LRU - Least Recently Used</h3>
+<ul>
+<li>The more recently a page has been accessed, the more likely it will be accessed again.</li>
+<li>Evict the Least Recently Accessed Page.</li>
+</ul>
+<h3 id="lfu-least-frequently-used">LFU - Least Frequently Used</h3>
+<ul>
+<li>Evict the least frequently used page.</li>
+</ul>
+<h3 id="workload-examples-notes">Workload Examples - Notes</h3>
+<ul>
+<li>All approaches will do as better as random for no-locality workloads.</li>
+<li>LRU performs the best in 80-20, followed by FIFO and RAND that perform the same.</li>
+</ul>
+<h3 id="approximating-lru-use-bit">Approximating LRU &amp; Use bit</h3>
+<ul>
+<li>Whenever a page is referenced, the use bit is set by hardware to 1.</li>
+<li>This Use bit can be used by OS to determine which page to evict.</li>
+</ul>
+<h4 id="clock-algorithm">Clock Algorithm</h4>
+<ul>
+<li>Imagine all the pages of the system arranged in a circular list.</li>
+<li>A clock hand points to some particular page to begin with (it doesn’t really matter which). When a replacement must occur, the OS checks if the currently-pointed to page P has a use bit of 1 or 0.</li>
+<li>If 1, this implies that page P was recently used and thus is not a good candidate for replacement.</li>
+<li>Thus, the use bit for P is set to 0 (cleared), and the clock hand is incremented to the next page (P + 1).</li>
+<li>The algorithm continues until it finds a use bit that is set to 0, implying this page has not been recently used</li>
+</ul>
+<h2 id="thrashing">Thrashing</h2>
+<ul>
+<li>If a process fills up the whole memory, the OS will always be paging. This condition is called Thrashing.</li>
+<li>(See Book)</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href=".." class="md-footer__link md-footer__link--prev" aria-label="Previous: Introduction">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Introduction
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../20-persistence/" class="md-footer__link md-footer__link--next" aria-label="Next: Persistence">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Persistence
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4Z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/millionhz/" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "..", "features": ["navigation.footer"], "search": "../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.fe8b6f2b.min.js"></script>
+      
+        <script src="../javascripts/katex.js"></script>
+      
+        <script src="https://unpkg.com/katex@0/dist/katex.min.js"></script>
+      
+        <script src="https://unpkg.com/katex@0/dist/contrib/auto-render.min.js"></script>
+      
+    
+  </body>
+</html>

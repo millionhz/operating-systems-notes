@@ -1,0 +1,1512 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../20-persistence/">
+      
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.29">
+    
+    
+      
+        <title>Concurrency - Operating Systems Notes</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.76a95c52.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="https://unpkg.com/katex@0/dist/katex.min.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#concurrency" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Operating Systems Notes" class="md-header__button md-logo" aria-label="Operating Systems Notes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Operating Systems Notes
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Concurrency
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7a5 5 0 0 0-5 5 5 5 0 0 0 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1M8 13h8v-2H8v2m9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1 0 1.71-1.39 3.1-3.1 3.1h-4V17h4a5 5 0 0 0 5-5 5 5 0 0 0-5-5Z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 7H7a5 5 0 0 0-5 5 5 5 0 0 0 5 5h10a5 5 0 0 0 5-5 5 5 0 0 0-5-5m0 8a3 3 0 0 1-3-3 3 3 0 0 1 3-3 3 3 0 0 1 3 3 3 3 0 0 1-3 3Z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="indigo"  aria-label="Switch to system preference"  type="radio" name="__palette" id="__palette_2">
+    
+      <label class="md-header__button md-icon" title="Switch to system preference" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 7H7a5 5 0 0 0-5 5 5 5 0 0 0 5 5h10a5 5 0 0 0 5-5 5 5 0 0 0-5-5M7 15a3 3 0 0 1-3-3 3 3 0 0 1 3-3 3 3 0 0 1 3 3 3 3 0 0 1-3 3Z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var media,input,key,value,palette=__md_get("__palette");if(palette&&palette.color){"(prefers-color-scheme)"===palette.color.media&&(media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']"),palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent"));for([key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Operating Systems Notes" class="md-nav__button md-logo" aria-label="Operating Systems Notes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    Operating Systems Notes
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Introduction
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../10-virtualization/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Virtualization
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20-persistence/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Persistence
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Concurrency
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Concurrency
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#multi-threaded-program" class="md-nav__link">
+    <span class="md-ellipsis">
+      Multi-Threaded Program
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Multi-Threaded Program">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#benefits-of-threads" class="md-nav__link">
+    <span class="md-ellipsis">
+      Benefits of Threads
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#are-threads-useful-on-a-single-cpu" class="md-nav__link">
+    <span class="md-ellipsis">
+      Are threads useful on a single CPU?
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#are-threads-useful-when-threads-cpus" class="md-nav__link">
+    <span class="md-ellipsis">
+      Are threads useful when #threads &gt; #CPUs?
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#multithreading-models" class="md-nav__link">
+    <span class="md-ellipsis">
+      Multithreading Models
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Multithreading Models">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#many-to-one" class="md-nav__link">
+    <span class="md-ellipsis">
+      Many to One
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#one-to-one" class="md-nav__link">
+    <span class="md-ellipsis">
+      One to One
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#many-to-many" class="md-nav__link">
+    <span class="md-ellipsis">
+      Many to Many
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#multithreading-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      Multithreading Patterns
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Multithreading Patterns">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#boss-worker" class="md-nav__link">
+    <span class="md-ellipsis">
+      Boss-Worker
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Boss-Worker">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#variants" class="md-nav__link">
+    <span class="md-ellipsis">
+      Variants
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      Pipeline
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#layered" class="md-nav__link">
+    <span class="md-ellipsis">
+      Layered
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#locks" class="md-nav__link">
+    <span class="md-ellipsis">
+      Locks
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#semaphores" class="md-nav__link">
+    <span class="md-ellipsis">
+      Semaphores
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#multiprocessors" class="md-nav__link">
+    <span class="md-ellipsis">
+      Multiprocessors
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Multiprocessors">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#caches-vs-memory" class="md-nav__link">
+    <span class="md-ellipsis">
+      Caches vs Memory
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#caches-and-multiple-cpus" class="md-nav__link">
+    <span class="md-ellipsis">
+      Caches and Multiple CPUs
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Caches and Multiple CPUs">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cache-coherence" class="md-nav__link">
+    <span class="md-ellipsis">
+      Cache Coherence
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hardware-cache-coherence" class="md-nav__link">
+    <span class="md-ellipsis">
+      Hardware - Cache Coherence
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Hardware - Cache Coherence">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#write-invalidate-write-through" class="md-nav__link">
+    <span class="md-ellipsis">
+      Write Invalidate (write-through)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#write-update-write-back" class="md-nav__link">
+    <span class="md-ellipsis">
+      Write Update (write-back)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#atomic-instructions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Atomic Instructions
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#numa-aware-scheduling" class="md-nav__link">
+    <span class="md-ellipsis">
+      NUMA Aware Scheduling
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cache-affinity-scheduling" class="md-nav__link">
+    <span class="md-ellipsis">
+      Cache Affinity &amp; Scheduling
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hyperthreading" class="md-nav__link">
+    <span class="md-ellipsis">
+      Hyperthreading
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scheduling-algorithms" class="md-nav__link">
+    <span class="md-ellipsis">
+      Scheduling Algorithms
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Scheduling Algorithms">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#single-queue-multiprocessor-sqms" class="md-nav__link">
+    <span class="md-ellipsis">
+      Single Queue Multiprocessor - SQMS
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Single Queue Multiprocessor - SQMS">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#advantage" class="md-nav__link">
+    <span class="md-ellipsis">
+      Advantage
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#disadvantage" class="md-nav__link">
+    <span class="md-ellipsis">
+      Disadvantage
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multi-queue-multiprocessor-scheduling-mqms" class="md-nav__link">
+    <span class="md-ellipsis">
+      Multi-Queue Multiprocessor Scheduling - MQMS
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Multi-Queue Multiprocessor Scheduling - MQMS">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#advantages" class="md-nav__link">
+    <span class="md-ellipsis">
+      Advantages
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#disadvantages" class="md-nav__link">
+    <span class="md-ellipsis">
+      Disadvantages
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dealing-with-load-imbalance" class="md-nav__link">
+    <span class="md-ellipsis">
+      Dealing with Load Imbalance
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#work-stealing" class="md-nav__link">
+    <span class="md-ellipsis">
+      Work stealing
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#multi-threaded-program" class="md-nav__link">
+    <span class="md-ellipsis">
+      Multi-Threaded Program
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Multi-Threaded Program">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#benefits-of-threads" class="md-nav__link">
+    <span class="md-ellipsis">
+      Benefits of Threads
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#are-threads-useful-on-a-single-cpu" class="md-nav__link">
+    <span class="md-ellipsis">
+      Are threads useful on a single CPU?
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#are-threads-useful-when-threads-cpus" class="md-nav__link">
+    <span class="md-ellipsis">
+      Are threads useful when #threads &gt; #CPUs?
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#multithreading-models" class="md-nav__link">
+    <span class="md-ellipsis">
+      Multithreading Models
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Multithreading Models">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#many-to-one" class="md-nav__link">
+    <span class="md-ellipsis">
+      Many to One
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#one-to-one" class="md-nav__link">
+    <span class="md-ellipsis">
+      One to One
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#many-to-many" class="md-nav__link">
+    <span class="md-ellipsis">
+      Many to Many
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#multithreading-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      Multithreading Patterns
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Multithreading Patterns">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#boss-worker" class="md-nav__link">
+    <span class="md-ellipsis">
+      Boss-Worker
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Boss-Worker">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#variants" class="md-nav__link">
+    <span class="md-ellipsis">
+      Variants
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      Pipeline
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#layered" class="md-nav__link">
+    <span class="md-ellipsis">
+      Layered
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#locks" class="md-nav__link">
+    <span class="md-ellipsis">
+      Locks
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#semaphores" class="md-nav__link">
+    <span class="md-ellipsis">
+      Semaphores
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#multiprocessors" class="md-nav__link">
+    <span class="md-ellipsis">
+      Multiprocessors
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Multiprocessors">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#caches-vs-memory" class="md-nav__link">
+    <span class="md-ellipsis">
+      Caches vs Memory
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#caches-and-multiple-cpus" class="md-nav__link">
+    <span class="md-ellipsis">
+      Caches and Multiple CPUs
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Caches and Multiple CPUs">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cache-coherence" class="md-nav__link">
+    <span class="md-ellipsis">
+      Cache Coherence
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hardware-cache-coherence" class="md-nav__link">
+    <span class="md-ellipsis">
+      Hardware - Cache Coherence
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Hardware - Cache Coherence">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#write-invalidate-write-through" class="md-nav__link">
+    <span class="md-ellipsis">
+      Write Invalidate (write-through)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#write-update-write-back" class="md-nav__link">
+    <span class="md-ellipsis">
+      Write Update (write-back)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#atomic-instructions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Atomic Instructions
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#numa-aware-scheduling" class="md-nav__link">
+    <span class="md-ellipsis">
+      NUMA Aware Scheduling
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cache-affinity-scheduling" class="md-nav__link">
+    <span class="md-ellipsis">
+      Cache Affinity &amp; Scheduling
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hyperthreading" class="md-nav__link">
+    <span class="md-ellipsis">
+      Hyperthreading
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scheduling-algorithms" class="md-nav__link">
+    <span class="md-ellipsis">
+      Scheduling Algorithms
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Scheduling Algorithms">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#single-queue-multiprocessor-sqms" class="md-nav__link">
+    <span class="md-ellipsis">
+      Single Queue Multiprocessor - SQMS
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Single Queue Multiprocessor - SQMS">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#advantage" class="md-nav__link">
+    <span class="md-ellipsis">
+      Advantage
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#disadvantage" class="md-nav__link">
+    <span class="md-ellipsis">
+      Disadvantage
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multi-queue-multiprocessor-scheduling-mqms" class="md-nav__link">
+    <span class="md-ellipsis">
+      Multi-Queue Multiprocessor Scheduling - MQMS
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Multi-Queue Multiprocessor Scheduling - MQMS">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#advantages" class="md-nav__link">
+    <span class="md-ellipsis">
+      Advantages
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#disadvantages" class="md-nav__link">
+    <span class="md-ellipsis">
+      Disadvantages
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dealing-with-load-imbalance" class="md-nav__link">
+    <span class="md-ellipsis">
+      Dealing with Load Imbalance
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#work-stealing" class="md-nav__link">
+    <span class="md-ellipsis">
+      Work stealing
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+<h1 id="concurrency">Concurrency</h1>
+<ul>
+<li><a href="https://applied-programming.github.io/Operating-Systems-Notes/3-Threads-and-Concurrency/">Threads and Concurrency</a></li>
+</ul>
+<h2 id="multi-threaded-program">Multi-Threaded Program</h2>
+<ul>
+<li>Program with more than one point of execution → Multiple Program Counters</li>
+<li>Threaded programs share the same memory space.</li>
+</ul>
+<p><img alt="Untitled" src="../img/Untitled%2070.png" /></p>
+<p><img alt="Untitled" src="../img/Untitled%2071.png" /></p>
+<h3 id="benefits-of-threads">Benefits of Threads</h3>
+<ul>
+<li>Parallelization<ul>
+<li>Process data in parallel.</li>
+<li>If a computer program or system is parallelized, it breaks a problem down into smaller pieces to be independently solved simultaneously by discrete computing resources.</li>
+</ul>
+</li>
+<li>Specialization<ul>
+<li>Threads will get the data they need from the cache. (As other threads performing some similar workload might have put it there)</li>
+</ul>
+</li>
+<li>Time for context switch in threads is less, since memory is shared, hence mapping is not required between virtual and physical memory.</li>
+</ul>
+<h3 id="are-threads-useful-on-a-single-cpu">Are threads useful on a single CPU?</h3>
+<ul>
+<li>Yes, If the time for switching to Thread2 and back is less than the time, Thread1 stays idle (in an IO)</li>
+</ul>
+<h3 id="are-threads-useful-when-threads-cpus">Are threads useful when #threads &gt; #CPUs?</h3>
+<ul>
+<li>Yes, because cost of thread switching is less than the cost of process switching, as we threads share address space and thus no need to remap address space.</li>
+</ul>
+<h2 id="multithreading-models">Multithreading Models</h2>
+<ul>
+<li>User Threads: Supported above the kernel and are managed without any kernel support. (dummy threads) (cheaper to make)</li>
+<li>Kernel Threads: Supported and managed directly by the Operating System. (true threads) (expensive to make)</li>
+</ul>
+<h3 id="many-to-one">Many to One</h3>
+<ul>
+<li>Many user level threads mapped to one kernel thread.</li>
+<li>Pros:<ul>
+<li>Portable</li>
+<li>Not effected by OS limits on kernel threads and other policies.</li>
+</ul>
+</li>
+<li>Cons:<ul>
+<li>True parallelism is not possible as one kernel thread will process one user thread at a time. (even on multicore system)</li>
+<li>If a user thread makes a blocking call, the whole process blocks.</li>
+</ul>
+</li>
+</ul>
+<h3 id="one-to-one">One to One</h3>
+<ul>
+<li>Every user thread is mapped to a unique kernel thread.</li>
+<li>Pros:<ul>
+<li>Does not block the process if one thread makes a blocking call.</li>
+<li>Parallelism is possible.</li>
+</ul>
+</li>
+<li>Cons:<ul>
+<li>Spawning a kernel thread for every user thread is expensive.</li>
+<li>Dependence on the OS for all operations</li>
+<li>Affected by OS limitation on kernel threads and policies.</li>
+</ul>
+</li>
+</ul>
+<h3 id="many-to-many">Many to Many</h3>
+<ul>
+<li>Many user threads are mapped to <strong>smaller</strong> or <strong>equal number</strong> of kernel threads.</li>
+<li>Best of both worlds</li>
+</ul>
+<h2 id="multithreading-patterns">Multithreading Patterns</h2>
+<ul>
+<li>How to structure multithreaded applications?</li>
+</ul>
+<h3 id="boss-worker">Boss-Worker</h3>
+<ul>
+<li>A Single Boss assigns work.</li>
+<li>Many workers perform the work assigned by the boss.</li>
+<li>Throughput of the system is dependent on the boss.</li>
+<li>Boss and workers communicate by<ul>
+<li>directly signaling individual workers</li>
+<li>using a producer-consumer queue</li>
+</ul>
+</li>
+<li>Pros:<ul>
+<li>Simplicity</li>
+</ul>
+</li>
+<li>Cons:<ul>
+<li>thread pool needs to be managed.</li>
+<li>process-consumer queue needs to be managed</li>
+<li>Boss doesnt have notion of locality; a worker does better if its assigned similar tasks (cache), but for that boss will need to know the state of the worker, which is not supported by boss-worker model.</li>
+</ul>
+</li>
+</ul>
+<h4 id="variants">Variants</h4>
+<ul>
+<li>Workers can be specialized for certain tasks.</li>
+<li>Boss will now need to know what task to assign to what worker.</li>
+<li>Pros:<ul>
+<li>Better locality</li>
+</ul>
+</li>
+<li>Cons:<ul>
+<li>Load Balancing</li>
+</ul>
+</li>
+</ul>
+<h3 id="pipeline">Pipeline</h3>
+<ul>
+<li>Divide the main task into subtasks.</li>
+<li>Assign each worker a specific subtask.</li>
+<li>Throughput of the system depends on the subtask that takes the longest (throughput can be managed by increasing or decreasing workers per subtasks)</li>
+<li>One worker will depend on the other.</li>
+<li>Pros:<ul>
+<li>Specialization</li>
+<li>Locality</li>
+</ul>
+</li>
+<li>Cons:<ul>
+<li>Balancing</li>
+<li>Synchronization overheads</li>
+</ul>
+</li>
+</ul>
+<h3 id="layered">Layered</h3>
+<ul>
+<li>CHECK SLIDES</li>
+</ul>
+<h2 id="locks">Locks</h2>
+<ul>
+<li>Keep code atomic.</li>
+<li>Keep critical areas safe.</li>
+<li>CHECK SLIDES + Book</li>
+</ul>
+<h2 id="semaphores">Semaphores</h2>
+<ul>
+<li>PENDING</li>
+</ul>
+<h2 id="multiprocessors">Multiprocessors</h2>
+<ul>
+<li>Computer architects have had a difficult time making a single CPU much faster without using (way) too much power</li>
+<li>Multiple processes can be scheduled on different CPUs</li>
+<li>Multithreaded applications can spread work across multiple CPUs and thus run faster</li>
+</ul>
+<h3 id="caches-vs-memory">Caches vs Memory</h3>
+<p><img alt="Untitled" src="../img/Untitled%2094.png" /></p>
+<ul>
+<li>The difference between the two is mainly around the use of hardware caches and how data is shared between the two.</li>
+</ul>
+<h2 id="caches-and-multiple-cpus">Caches and Multiple CPUs</h2>
+<ul>
+<li>In multi CPU architectures, caches can be shared.</li>
+<li>If there are three levels of caches, L0 and L1 will be dedicated to the CPU but L2 will be shared.</li>
+</ul>
+<h3 id="cache-coherence">Cache Coherence</h3>
+<ul>
+<li>Program running on one CPU can read the cache and write the cache the data, but as the CPU buffers the writes to main memory, if the program gets moved to another CPU with a different cache. It may not be able to access the updated data that is still sitting in the cache of the old CPU waiting to be written.</li>
+<li>Similarly if a program is running on the 2 CPUs with a certain variable if cached in the both CPUs, then if a CPU writes and mutates the value of the variable, the cache of the old CPU will not be updated and will cause issues.</li>
+<li>Generally, its is difficult to ensure that the data in caches is coherent across CPUs.</li>
+</ul>
+<h3 id="hardware-cache-coherence">Hardware - Cache Coherence</h3>
+<h4 id="write-invalidate-write-through">Write Invalidate (write-through)</h4>
+<ul>
+<li>If one CPUs tries to modify a variable in the shared memory, hardware controller will invalidate the caches of the other CPUs.</li>
+<li>Subsequent reads will be issue to the Main memory.</li>
+<li>This <strong>only solves the problem if the caches being used are write-through</strong> (i.e. values are updated in both the main memory and the cache)</li>
+<li>
+<ul>
+<li>Lower Bandwidth - if you write to one cache, the only thing that happens is invalidation of other caches.</li>
+</ul>
+</li>
+</ul>
+<h4 id="write-update-write-back">Write Update (write-back)</h4>
+<ul>
+<li>If a cache is modified, all other caches are also modified with the updated value.</li>
+<li>
+<ul>
+<li>Large amount of traffic: needs to update all pages.</li>
+</ul>
+</li>
+<li>
+<ul>
+<li>The updated variable is immediately available.</li>
+</ul>
+</li>
+</ul>
+<h3 id="atomic-instructions">Atomic Instructions</h3>
+<ul>
+<li>Atomic instruction have to deal with concurrent execution in case of multiple CPUs.</li>
+<li>Atomic instructions are handed by a memory controller<ul>
+<li>which maintains the order and synchronization of the instructions.</li>
+<li>no 2 atomic instruction will get issued to the main memory directly.</li>
+</ul>
+</li>
+<li>
+<ul>
+<li>Takes Longer</li>
+</ul>
+</li>
+<li>
+<ul>
+<li>Generated coherence traffic</li>
+</ul>
+</li>
+</ul>
+<h2 id="numa-aware-scheduling">NUMA Aware Scheduling</h2>
+<ul>
+<li>In a multiprocessor architecture, there are multiple CPUs with multiple memory chips.</li>
+<li>The CPU closest to the memory containing the data will perform the fastest.</li>
+<li>When scheduling, ensure that the cpu closest to the memory with the data is scheduled to run.</li>
+<li>Non Uniform Memory Access NUMA aware scheduling - algorithms that take in account the location of the memory with respect to the CPU.</li>
+</ul>
+<h2 id="cache-affinity-scheduling">Cache Affinity &amp; Scheduling</h2>
+<ul>
+<li>Schedule threads onto the same CPU as much as possible to take advantage of hot caches.</li>
+</ul>
+<h2 id="hyperthreading"><em>Hyperthreading</em></h2>
+<ul>
+<li>Multithreading on a single CPU</li>
+<li>Keep an array of registers with data of processes (only on of them is active)</li>
+<li>Context Switching is faster</li>
+<li>Challenge: What kind of threads should be co-scheduled:<ul>
+<li>Mix of I/O and CPU bound processes</li>
+</ul>
+</li>
+<li>Hyperthreading also reduces memory access latency by employing hot caches.</li>
+</ul>
+<h2 id="scheduling-algorithms">Scheduling Algorithms</h2>
+<h3 id="single-queue-multiprocessor-sqms">Single Queue Multiprocessor - SQMS</h3>
+<ul>
+<li>Put all jobs that need to be scheduled into a single queue.</li>
+</ul>
+<h4 id="advantage">Advantage</h4>
+<ul>
+<li>Simplicity</li>
+</ul>
+<h4 id="disadvantage">Disadvantage</h4>
+<ul>
+<li>Locks on a single queue slows down execution</li>
+<li>Cache affinity is violated. Jobs end up bouncing around from CPU to CPU</li>
+<li>Some threads can be bound to specific CPUs and the rest of the threads can be allowed to bounce around.</li>
+</ul>
+<p><img alt="Untitled" src="../img/Untitled%2095.png" /></p>
+<h3 id="multi-queue-multiprocessor-scheduling-mqms">Multi-Queue Multiprocessor Scheduling - MQMS</h3>
+<ul>
+<li>Multiple scheduling queues, one per processor/core</li>
+<li>When a job enters the system, it is placed on exactly one scheduling queue random, or picking one with fewer jobs than others<ul>
+<li>The job stays bound to the queue throughout its lifecycle</li>
+</ul>
+</li>
+</ul>
+<h4 id="advantages">Advantages</h4>
+<ul>
+<li>Cache Affinity</li>
+</ul>
+<h4 id="disadvantages">Disadvantages</h4>
+<p><img alt="Untitled" src="../img/Untitled%2096.png" /></p>
+<h4 id="dealing-with-load-imbalance">Dealing with Load Imbalance</h4>
+<p><img alt="Untitled" src="../img/Untitled%2097.png" /></p>
+<p><img alt="Untitled" src="../img/Untitled%2098.png" /></p>
+<h4 id="work-stealing"><strong>Work stealing</strong></h4>
+<ul>
+<li>A (source) queue that is low on jobs will occasionally peek at another (target) queue</li>
+<li>If the target queue is fuller than the source queue, the source will “steal” one or more jobs from the target to help balance load</li>
+<li>If you look around at other queues too often, you will suffer from high overhead and have trouble scaling</li>
+<li>If you don’t look at other queues very often, you are in danger of suffering from severe load imbalances</li>
+<li>Finding the right threshold → a voodoo parameter</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../20-persistence/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Persistence">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Persistence
+              </div>
+            </div>
+          </a>
+        
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/millionhz/" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "..", "features": ["navigation.footer"], "search": "../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.fe8b6f2b.min.js"></script>
+      
+        <script src="../javascripts/katex.js"></script>
+      
+        <script src="https://unpkg.com/katex@0/dist/katex.min.js"></script>
+      
+        <script src="https://unpkg.com/katex@0/dist/contrib/auto-render.min.js"></script>
+      
+    
+  </body>
+</html>

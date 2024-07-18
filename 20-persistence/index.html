@@ -1,0 +1,1660 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../10-virtualization/">
+      
+      
+        <link rel="next" href="../30-concurrency/">
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.29">
+    
+    
+      
+        <title>Persistence - Operating Systems Notes</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.76a95c52.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="https://unpkg.com/katex@0/dist/katex.min.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#persistence" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Operating Systems Notes" class="md-header__button md-logo" aria-label="Operating Systems Notes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Operating Systems Notes
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Persistence
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7a5 5 0 0 0-5 5 5 5 0 0 0 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1M8 13h8v-2H8v2m9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1 0 1.71-1.39 3.1-3.1 3.1h-4V17h4a5 5 0 0 0 5-5 5 5 0 0 0-5-5Z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 7H7a5 5 0 0 0-5 5 5 5 0 0 0 5 5h10a5 5 0 0 0 5-5 5 5 0 0 0-5-5m0 8a3 3 0 0 1-3-3 3 3 0 0 1 3-3 3 3 0 0 1 3 3 3 3 0 0 1-3 3Z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="indigo"  aria-label="Switch to system preference"  type="radio" name="__palette" id="__palette_2">
+    
+      <label class="md-header__button md-icon" title="Switch to system preference" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 7H7a5 5 0 0 0-5 5 5 5 0 0 0 5 5h10a5 5 0 0 0 5-5 5 5 0 0 0-5-5M7 15a3 3 0 0 1-3-3 3 3 0 0 1 3-3 3 3 0 0 1 3 3 3 3 0 0 1-3 3Z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var media,input,key,value,palette=__md_get("__palette");if(palette&&palette.color){"(prefers-color-scheme)"===palette.color.media&&(media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']"),palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent"));for([key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Operating Systems Notes" class="md-nav__button md-logo" aria-label="Operating Systems Notes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    Operating Systems Notes
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Introduction
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../10-virtualization/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Virtualization
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Persistence
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Persistence
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#io" class="md-nav__link">
+    <span class="md-ellipsis">
+      I/O
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="I/O">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#classical-system-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      Classical System Architecture
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modern-system-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      Modern System Architecture
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#canonical-device-protocol" class="md-nav__link">
+    <span class="md-ellipsis">
+      Canonical Device &amp; Protocol
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Canonical Device & Protocol">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#interfacecontroller" class="md-nav__link">
+    <span class="md-ellipsis">
+      Interface/Controller
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#protocol" class="md-nav__link">
+    <span class="md-ellipsis">
+      Protocol
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pooling-and-interrupts" class="md-nav__link">
+    <span class="md-ellipsis">
+      Pooling and Interrupts
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Pooling and Interrupts">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#problem-with-interrupts" class="md-nav__link">
+    <span class="md-ellipsis">
+      Problem with Interrupts
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#direct-memory-access-dma" class="md-nav__link">
+    <span class="md-ellipsis">
+      Direct Memory Access - DMA
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#interacting-with-device" class="md-nav__link">
+    <span class="md-ellipsis">
+      Interacting with Device
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Interacting with Device">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#explicit-io" class="md-nav__link">
+    <span class="md-ellipsis">
+      Explicit I/O
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#memory-mapped-io" class="md-nav__link">
+    <span class="md-ellipsis">
+      Memory-mapped I/O
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#device-drivers" class="md-nav__link">
+    <span class="md-ellipsis">
+      Device Drivers
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Device Drivers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#problem-with-standardized-drivers" class="md-nav__link">
+    <span class="md-ellipsis">
+      Problem with Standardized Drivers
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#types-of-devices" class="md-nav__link">
+    <span class="md-ellipsis">
+      Types of Devices
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hard-disk-drives" class="md-nav__link">
+    <span class="md-ellipsis">
+      Hard Disk Drives
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Hard Disk Drives">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#geometry" class="md-nav__link">
+    <span class="md-ellipsis">
+      Geometry
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rotational-delay" class="md-nav__link">
+    <span class="md-ellipsis">
+      Rotational Delay
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#seek-time" class="md-nav__link">
+    <span class="md-ellipsis">
+      Seek Time
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Seek Time">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#phases" class="md-nav__link">
+    <span class="md-ellipsis">
+      Phases
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#track-skew" class="md-nav__link">
+    <span class="md-ellipsis">
+      Track Skew
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multizoning" class="md-nav__link">
+    <span class="md-ellipsis">
+      Multizoning
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#track-buffer" class="md-nav__link">
+    <span class="md-ellipsis">
+      Track Buffer
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#write-back-and-write-through" class="md-nav__link">
+    <span class="md-ellipsis">
+      Write Back and Write Through
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#math" class="md-nav__link">
+    <span class="md-ellipsis">
+      Math
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scheduling" class="md-nav__link">
+    <span class="md-ellipsis">
+      Scheduling
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#shortest-seek-time-first-sstf" class="md-nav__link">
+    <span class="md-ellipsis">
+      Shortest Seek Time First - SSTF
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scan" class="md-nav__link">
+    <span class="md-ellipsis">
+      SCAN
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#c-scan" class="md-nav__link">
+    <span class="md-ellipsis">
+      C-SCAN
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#file-system" class="md-nav__link">
+    <span class="md-ellipsis">
+      File System
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="File System">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#inode" class="md-nav__link">
+    <span class="md-ellipsis">
+      Inode
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multi-level-index" class="md-nav__link">
+    <span class="md-ellipsis">
+      Multi-Level Index
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#directories" class="md-nav__link">
+    <span class="md-ellipsis">
+      Directories
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#file-reading" class="md-nav__link">
+    <span class="md-ellipsis">
+      File Reading
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#writing-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      Writing Data
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#caching-and-buffering" class="md-nav__link">
+    <span class="md-ellipsis">
+      Caching and Buffering
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Caching and Buffering">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#static-partitioning" class="md-nav__link">
+    <span class="md-ellipsis">
+      Static Partitioning
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dynamic-partitioning" class="md-nav__link">
+    <span class="md-ellipsis">
+      Dynamic Partitioning
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#write-buffering" class="md-nav__link">
+    <span class="md-ellipsis">
+      Write Buffering
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../30-concurrency/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Concurrency
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#io" class="md-nav__link">
+    <span class="md-ellipsis">
+      I/O
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="I/O">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#classical-system-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      Classical System Architecture
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modern-system-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      Modern System Architecture
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#canonical-device-protocol" class="md-nav__link">
+    <span class="md-ellipsis">
+      Canonical Device &amp; Protocol
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Canonical Device & Protocol">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#interfacecontroller" class="md-nav__link">
+    <span class="md-ellipsis">
+      Interface/Controller
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#protocol" class="md-nav__link">
+    <span class="md-ellipsis">
+      Protocol
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pooling-and-interrupts" class="md-nav__link">
+    <span class="md-ellipsis">
+      Pooling and Interrupts
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Pooling and Interrupts">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#problem-with-interrupts" class="md-nav__link">
+    <span class="md-ellipsis">
+      Problem with Interrupts
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#direct-memory-access-dma" class="md-nav__link">
+    <span class="md-ellipsis">
+      Direct Memory Access - DMA
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#interacting-with-device" class="md-nav__link">
+    <span class="md-ellipsis">
+      Interacting with Device
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Interacting with Device">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#explicit-io" class="md-nav__link">
+    <span class="md-ellipsis">
+      Explicit I/O
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#memory-mapped-io" class="md-nav__link">
+    <span class="md-ellipsis">
+      Memory-mapped I/O
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#device-drivers" class="md-nav__link">
+    <span class="md-ellipsis">
+      Device Drivers
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Device Drivers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#problem-with-standardized-drivers" class="md-nav__link">
+    <span class="md-ellipsis">
+      Problem with Standardized Drivers
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#types-of-devices" class="md-nav__link">
+    <span class="md-ellipsis">
+      Types of Devices
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hard-disk-drives" class="md-nav__link">
+    <span class="md-ellipsis">
+      Hard Disk Drives
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Hard Disk Drives">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#geometry" class="md-nav__link">
+    <span class="md-ellipsis">
+      Geometry
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rotational-delay" class="md-nav__link">
+    <span class="md-ellipsis">
+      Rotational Delay
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#seek-time" class="md-nav__link">
+    <span class="md-ellipsis">
+      Seek Time
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Seek Time">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#phases" class="md-nav__link">
+    <span class="md-ellipsis">
+      Phases
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#track-skew" class="md-nav__link">
+    <span class="md-ellipsis">
+      Track Skew
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multizoning" class="md-nav__link">
+    <span class="md-ellipsis">
+      Multizoning
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#track-buffer" class="md-nav__link">
+    <span class="md-ellipsis">
+      Track Buffer
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#write-back-and-write-through" class="md-nav__link">
+    <span class="md-ellipsis">
+      Write Back and Write Through
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#math" class="md-nav__link">
+    <span class="md-ellipsis">
+      Math
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scheduling" class="md-nav__link">
+    <span class="md-ellipsis">
+      Scheduling
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#shortest-seek-time-first-sstf" class="md-nav__link">
+    <span class="md-ellipsis">
+      Shortest Seek Time First - SSTF
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scan" class="md-nav__link">
+    <span class="md-ellipsis">
+      SCAN
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#c-scan" class="md-nav__link">
+    <span class="md-ellipsis">
+      C-SCAN
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#file-system" class="md-nav__link">
+    <span class="md-ellipsis">
+      File System
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="File System">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#inode" class="md-nav__link">
+    <span class="md-ellipsis">
+      Inode
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multi-level-index" class="md-nav__link">
+    <span class="md-ellipsis">
+      Multi-Level Index
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#directories" class="md-nav__link">
+    <span class="md-ellipsis">
+      Directories
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#file-reading" class="md-nav__link">
+    <span class="md-ellipsis">
+      File Reading
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#writing-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      Writing Data
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#caching-and-buffering" class="md-nav__link">
+    <span class="md-ellipsis">
+      Caching and Buffering
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Caching and Buffering">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#static-partitioning" class="md-nav__link">
+    <span class="md-ellipsis">
+      Static Partitioning
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dynamic-partitioning" class="md-nav__link">
+    <span class="md-ellipsis">
+      Dynamic Partitioning
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#write-buffering" class="md-nav__link">
+    <span class="md-ellipsis">
+      Write Buffering
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+<h1 id="persistence">Persistence</h1>
+<h2 id="io">I/O</h2>
+<h3 id="classical-system-architecture">Classical System Architecture</h3>
+<ul>
+<li>Why hierarchical structure?<ul>
+<li>Faster Busses needs to short and are expensive to make.</li>
+<li>Components of high demand needs to closer to the CPU</li>
+</ul>
+</li>
+</ul>
+<p><img alt="Untitled" src="../img/Untitled%2072.png" /></p>
+<h3 id="modern-system-architecture">Modern System Architecture</h3>
+<ul>
+<li>Modern systems increasingly use specialized chipsets and faster point-to-point interconnects to improve performance</li>
+<li>CPU connects directly to high performance devices like Graphics and Memory</li>
+<li>I/O chips manages other basic devices by offering a number of different interconnects and forward the connection to the CPU using a standardized DMI bus.</li>
+</ul>
+<p><img alt="Untitled" src="../img/Untitled%2073.png" /></p>
+<h2 id="canonical-device-protocol">Canonical Device &amp; Protocol</h2>
+<ul>
+<li>A Canonical Device has:<ul>
+<li><strong>Interface:</strong> Allows the system software (OS) to communicate with the device.</li>
+<li><strong>Internals:</strong> Implements the abstractions the device presents to the system.</li>
+</ul>
+</li>
+</ul>
+<p><img alt="Untitled" src="../img/Untitled%2074.png" /></p>
+<h3 id="interfacecontroller">Interface/Controller</h3>
+<ul>
+<li><strong>Status:</strong> Reports the current status of the device (BUSY or not)</li>
+<li><strong>Command: </strong>**Stores the commands that are sent by the OS and run by the device</li>
+<li><strong>Data:</strong> Used to pass and get data to the device.</li>
+</ul>
+<h3 id="protocol">Protocol</h3>
+<ul>
+<li>The OS waits until the device is ready to receive command by repeatedly reading the status register (pooling).</li>
+<li>The OS writes data to the data register.</li>
+<li>The OS writes command to the command register which implicitly lets the device know that the data is present and it should start execution.</li>
+<li>The OS again waits until the device is ready to receive command by repeatedly reading the status register (pooling).</li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Pooling is CPU intensive. The CPU wastes cycles checking the status register of the device.</p>
+</div>
+<h2 id="pooling-and-interrupts">Pooling and Interrupts</h2>
+<ul>
+<li>Instead of polling the device repeatedly, the OS can issue a request, put the calling process to sleep, and context switch to another task.</li>
+<li>When the device is finally finished with the operation, it will raise a hardware interrupt, causing the CPU to jump into the OS’s interrupt handler.</li>
+<li>The interrupt handler will wake the process waiting for the I/O, which can then proceed as desired.</li>
+<li>Interrupts thus allow for overlap of computation and I/O, which is key for improved utilization.</li>
+</ul>
+<p><img alt="Untitled" src="../img/Untitled%2075.png" /></p>
+<h3 id="problem-with-interrupts">Problem with Interrupts</h3>
+<ul>
+<li>The I/O device performs the request very quickly:<ul>
+<li>Ideally the first poll will find the device done with the task</li>
+<li>but with interrupts the process (issuing IO) will have to wait for the next interrupt</li>
+<li>For fast IO devices, use pooling; For devices whose speed is not knows, use hybrid approach; otherwise use interrupts.</li>
+</ul>
+</li>
+<li>Network related I/O.<ul>
+<li>Livestock: When OS is doing nothing but processing interrupts.</li>
+<li>Such conditions arise when programs like webservers suddenly receive a large number of traffic.</li>
+<li>In case of interrupts, the OS will keep processing the interrupts instead of processing requests (requests are usually processed by other processes)</li>
+</ul>
+</li>
+<li><strong>Coalescing</strong>: Lower the overhead of interrupts by coalescing multiple interrupts into a single interrupt delivery unit,<ul>
+<li>Device delivering the interrupt waits for a while, this lets other requests to be completed whose interrupts can be coalesced together.</li>
+</ul>
+</li>
+</ul>
+<h3 id="direct-memory-access-dma">Direct Memory Access - DMA</h3>
+<ul>
+<li>While transferring large chunks of data to the device, the CPU has to waste a lot of time to populate the data register of the device. This trivial task wastes time that can be spent on running other processes.</li>
+</ul>
+<p><img alt="Untitled" src="../img/Untitled%2076.png" /></p>
+<ul>
+<li>DMA is a specific device that can be programed to transfer data from memory to the CPU.</li>
+<li>OS programs the DMA engine by telling it where the data lives in memory, how much data to copy, and which device to send it to and DMA does the trivial task of copying by itself.</li>
+<li>After the transfer is complete, DMA raises an interrupt.</li>
+</ul>
+<p><img alt="Untitled" src="../img/Untitled%2077.png" /></p>
+<h2 id="interacting-with-device">Interacting with Device</h2>
+<h3 id="explicit-io">Explicit I/O</h3>
+<ul>
+<li>Privileged <code>in</code> and <code>out</code> instructions.</li>
+</ul>
+<h3 id="memory-mapped-io">Memory-mapped I/O</h3>
+<ul>
+<li>Device registers are available as memory locations, where the OS can write data the to.</li>
+<li>The data then gets routed to the device.</li>
+<li>Advantage: Can use the <code>load</code> and <code>store</code> instructions to interact with the device (no need for special instructions)</li>
+</ul>
+<h2 id="device-drivers">Device Drivers</h2>
+<ul>
+<li>Provide abstractions for device access management and control.</li>
+<li>Provided by the manufacturer of the device.</li>
+<li>Makes up majority of the code in an OS.</li>
+<li>Part of the kernel.</li>
+</ul>
+<h3 id="problem-with-standardized-drivers">Problem with Standardized Drivers</h3>
+<ul>
+<li>Specialized functionalities provided by the device can not be utilized without updating the underlying driver.</li>
+</ul>
+<h2 id="types-of-devices">Types of Devices</h2>
+<p><img alt="Untitled" src="../img/Untitled%2078.png" /></p>
+<h2 id="hard-disk-drives">Hard Disk Drives</h2>
+<ul>
+<li>Consists of many <strong>sectors</strong> (512-byte blocks), each of which can be read or written</li>
+<li>Sectors are numbered from 0 to n − 1 on a disk with n sectors.<ul>
+<li>Sectors have addresses.</li>
+</ul>
+</li>
+<li>Multi-sector operations are possible; many file systems will read or write 4KB at a time.</li>
+<li>The only guarantee drive manufacturers make is that a single 512-byte write is atomic.</li>
+<li>Accessing two blocks near one-another within the drive’s address space will be faster than accessing two blocks that are far apart (not random access).</li>
+<li>Accessing blocks in a contiguous chunk (i.e., a sequential read or write) is the fastest access mode, and usually much faster than any more random-access pattern.</li>
+</ul>
+<h3 id="geometry">Geometry</h3>
+<ul>
+<li><strong>Platter:</strong> a circular hard surface on which data is stored persistently by inducing magnetic changes to it.</li>
+<li><strong>Surface:</strong> Each platter has 2 sides, each of which is called a surface.</li>
+<li><strong>Spindle:</strong> Binds together multiple platters, and connected to a motor that spins the platters around at a constant rate<ul>
+<li>The rate of rotation is often measured in rotations per minute (RPM), and typical modern values are in the 7,200 RPM to 15,000 RPM range</li>
+</ul>
+</li>
+<li>Data is encoded on each surface in concentric circles of sectors; we call one such concentric circle a track.</li>
+<li>A single surface contains many thousands and thousands of tracks, tightly packed together, with hundreds of tracks fitting into the width of a human hair.</li>
+<li>This process of reading and writing is accomplished by the disk head, one such head per surface of the drive.</li>
+<li>The disk head is attached to a single disk arm, which moves across the surface to position the head over the desired track.</li>
+</ul>
+<h3 id="rotational-delay">Rotational Delay</h3>
+<ul>
+<li>The time it takes for the disk to rotate completely.</li>
+</ul>
+<h3 id="seek-time">Seek Time</h3>
+<ul>
+<li>Time it takes to switch sectors.</li>
+<li>One of the costliest operations.</li>
+</ul>
+<h4 id="phases">Phases</h4>
+<ul>
+<li>Acceleration - the disk arm starts to move.</li>
+<li>Coasting</li>
+<li>Deceleration</li>
+<li>Settling - the arms position itself onto the track</li>
+</ul>
+<h3 id="track-skew">Track Skew</h3>
+<ul>
+<li>Sequential reads must be properly serviced even when crossing track boundaries.</li>
+<li>When switching tracks the head needs some time to settle down. This time delay is adjusted by skewing the tracks by a few sectors.</li>
+</ul>
+<p><img alt="Untitled" src="../img/Untitled%2079.png" /></p>
+<h3 id="multizoning">Multizoning</h3>
+<ul>
+<li>Outer tracks are bigger and can accommodate more sectors.</li>
+<li>Disk is organized into multiple zones: a zone is consecutive set of tracks on a surface with the same number of sectors per track.</li>
+<li>Outer zones have more sectors than inner zones.</li>
+</ul>
+<h3 id="track-buffer">Track Buffer</h3>
+<ul>
+<li>Small amount of memory that acts as cache.</li>
+<li>For example, when reading a sector from the disk, the drive might decide to read in all the sectors on that track and cache them in its memory. (spatial locality)</li>
+<li>The OS reads and writes to this buffer.</li>
+</ul>
+<h3 id="write-back-and-write-through">Write Back and Write Through</h3>
+<ul>
+<li><strong>Write Back</strong><ul>
+<li>Acknowledge that write has completed after the disk has put the data in its memory.</li>
+<li>This appears faster but can cause problems if the order of writes is important.</li>
+</ul>
+</li>
+<li><strong>Write Through</strong><ul>
+<li>Acknowledge the write after the data has been written to the platter.</li>
+</ul>
+</li>
+</ul>
+<h3 id="math">Math</h3>
+<div class="arithmatex">\[
+\text{I/O Time} = T_{seek} + T_{rotation} + T_{transfer}
+\]</div>
+<div class="arithmatex">\[
+R_{I/O} = \frac{Size_{transfer}}{T_{I/O}}
+\]</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>To calculate average rotation time, RPMs are divided by 2 as in average the disk will rotate only half way.</p>
+</div>
+<h3 id="scheduling">Scheduling</h3>
+<h3 id="shortest-seek-time-first-sstf">Shortest Seek Time First - SSTF</h3>
+<p><img alt="Untitled" src="../img/Untitled%2080.png" /></p>
+<h3 id="scan">SCAN</h3>
+<p><img alt="Untitled" src="../img/Untitled%2081.png" /></p>
+<ul>
+<li>The middle tracks gets served twice on average.</li>
+</ul>
+<h3 id="c-scan">C-SCAN</h3>
+<ul>
+<li>Instead of sweeping in both directions across the disk, the algorithm only sweeps from outer-to-inner, and then resets at the outer track to begin again</li>
+<li>Doing so is a bit more fair to inner and outer tracks.</li>
+</ul>
+<p><img alt="Untitled" src="../img/Untitled%2082.png" /></p>
+<h2 id="file-system">File System</h2>
+<ul>
+<li>A disk is divided into fixed sized portions called blocks (each of size 4KB)</li>
+</ul>
+<p><img alt="Untitled" src="../img/Untitled%2083.png" /></p>
+<ul>
+<li>Most of the space in the file system is users data</li>
+</ul>
+<p><img alt="Untitled" src="../img/Untitled%2084.png" /></p>
+<ul>
+<li>File system must track information about each file<ul>
+<li>Which data blocks (in the data region) comprise a file, the size of the file, its owner and access rights, access and modify times, and others → inode</li>
+<li>inode table: reserved space on disk for inodes</li>
+<li>5 of 64 blocks for inodes</li>
+<li>Typical inode size: 128-256 bytes</li>
+</ul>
+</li>
+<li>Number of inodes represent the total number of files we can have on our filesystem.</li>
+</ul>
+<p><img alt="Untitled" src="../img/Untitled%2085.png" /></p>
+<ul>
+<li>File system also needs to keep track of the unallocated or free blocks using bitmaps<ul>
+<li>Data bitmap: for the data region</li>
+<li>inode bitmap: for the inode table</li>
+<li>Each bit indicates whether corresponding object/block is free (0) or in-use (1)</li>
+<li>We use an entire 4-KB block for each of these bitmaps for simplicity</li>
+</ul>
+</li>
+</ul>
+<p><img alt="Untitled" src="../img/Untitled%2086.png" /></p>
+<ul>
+<li>The superblock contains information about this particular file system, including, for example<ul>
+<li>how many inodes and data blocks are in the file system (80 and 56)</li>
+<li>where the inode table begins (block 3), and so forth.</li>
+<li>magic number to identify the file system</li>
+</ul>
+</li>
+<li>while mounting the file, the is reads the superblock to initialize the parameters</li>
+</ul>
+<p><img alt="Untitled" src="../img/Untitled%2087.png" /></p>
+<h3 id="inode">Inode</h3>
+<ul>
+<li>Each inode is implicitly referred to by a number (called the i-number)</li>
+<li>Given an i-number, you should directly be able to calculate where on the disk the corresponding inode is located<ul>
+<li>Calculate the offset into the inode region (32 x sizeof(inode) (256 bytes) = 8192</li>
+<li>Add start address of the inode table(12 KB) + inode region(8 KB) = 20 KB</li>
+</ul>
+</li>
+</ul>
+<pre><code class="language-c">blk = (inumber * sizeof(inode_t)) / blockSize;
+sector = ((blk * blockSize) + inodeStartAddr) / sectorSize;
+</code></pre>
+<p><img alt="Untitled" src="../img/Untitled%2088.png" /></p>
+<ul>
+<li>Direct Pointers: Inodes also have one or more direct pointers that point to the disk block containing the data.</li>
+</ul>
+<p><img alt="Untitled" src="../img/Untitled%2089.png" /></p>
+<h3 id="multi-level-index">Multi-Level Index</h3>
+<ul>
+<li>Indirect pointers are used to support files that can not be referenced by the limited number of direct pointers</li>
+<li>Instead of pointing to a block that contains user data, it points to a block that contains more pointers, each of which point to user data.</li>
+<li>To support even larger files double indirect or triple indirect pointers can be used.</li>
+<li>Multi-level indexes are imbalanced trees:<ul>
+<li>this does not effect performance as majority of the files are small and do not utilize the indirect pointers.</li>
+</ul>
+</li>
+</ul>
+<h3 id="directories">Directories</h3>
+<ul>
+<li>a directory basically just contains a list of (entry name, inode number) pairs.</li>
+<li>file system treats directories as special type of files; they are indexed in the inode table.</li>
+<li>For each file or directory in a given directory, there is a string and a number in the data block(s) of the directory</li>
+<li>For each string, there may also be a length (assuming variable-sized names)</li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>in modern file systems, multiple blocks, lets say 8, are allocated (searched and marked for allocation) instead of 1 to store a file. This ensures that the files are stored contiguously.</p>
+</div>
+<h2 id="file-reading">File Reading</h2>
+<p><img alt="Untitled" src="../img/Untitled%2090.png" /></p>
+<p><img alt="Untitled" src="../img/Untitled%2091.png" /></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Amount of I/O generated by the open is proportional to the length of the pathname.</p>
+</div>
+<p>For each additional directory in the path, we have to read its inode as well as its data.
+This can be made worse if the directory is large.</p>
+<h2 id="writing-data">Writing Data</h2>
+<ul>
+<li>Each write to a file logically generates five I/Os:<ul>
+<li>one to read the data bitmap (which is then updated to mark the newly-allocated block as used)</li>
+<li>one to write the bitmap (to reflect its new state to disk)</li>
+<li>two more to read and then write the inode (which is updated with the new block’s location),</li>
+<li>one to write the actual block itself.</li>
+</ul>
+</li>
+<li><em>See Book for detailed walkthrough</em></li>
+<li>Write operations generate a large amount of I/O calls.</li>
+</ul>
+<h2 id="caching-and-buffering">Caching and Buffering</h2>
+<ul>
+<li>Every file open would require at least two reads for every level in the directory hierarchy (one to read the inode of the directory in question, and at least one to read its data)</li>
+<li>Most file systems aggressively use system memory to cache important blocks</li>
+</ul>
+<h3 id="static-partitioning">Static Partitioning</h3>
+<ul>
+<li>Fixed size cache based on LRU policy</li>
+<li>Caches popular blocks of disk.</li>
+<li>Initialized at boot time and is generally 10% of the the total memory.</li>
+<li>Problem:<ul>
+<li>Wasteful - If the disk does not require 10% of the memory, the allocated pages go unused.</li>
+</ul>
+</li>
+</ul>
+<p><img alt="Untitled" src="../img/Untitled%2092.png" /></p>
+<h3 id="dynamic-partitioning">Dynamic Partitioning</h3>
+<ul>
+<li>Modern operating systems integrate virtual memory pages and file system pages into a unified page cache</li>
+<li>Memory can be allocated more flexibly across virtual memory and file system, depending on which needs more memory at a given time</li>
+</ul>
+<p><img alt="Untitled" src="../img/Untitled%2093.png" /></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Reads can be optimized by a large amount of cache but write requests need to generate I/O operations to be persistent.</p>
+</div>
+<h3 id="write-buffering">Write Buffering</h3>
+<ul>
+<li>Delaying Writes<ul>
+<li>the file system can batch some updates into a smaller set of I/Os; for example, if an inode bitmap is updated when one file is created and then updated moments later as another file is created, the file system saves an I/O by delaying the write after the first update.</li>
+<li>Some writes can be avoided all together, in case if an application created a file and then deletes it.</li>
+</ul>
+</li>
+<li>By keeping writes in memory longer, performance can be improved by batching, scheduling, and even avoiding writes</li>
+<li>Problem:<ul>
+<li>if the system crashes before the updates have been propagated to disk, the updates are lost</li>
+</ul>
+</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../10-virtualization/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Virtualization">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Virtualization
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../30-concurrency/" class="md-footer__link md-footer__link--next" aria-label="Next: Concurrency">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Concurrency
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4Z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/millionhz/" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "..", "features": ["navigation.footer"], "search": "../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.fe8b6f2b.min.js"></script>
+      
+        <script src="../javascripts/katex.js"></script>
+      
+        <script src="https://unpkg.com/katex@0/dist/katex.min.js"></script>
+      
+        <script src="https://unpkg.com/katex@0/dist/contrib/auto-render.min.js"></script>
+      
+    
+  </body>
+</html>
